@@ -8,8 +8,10 @@ const createWallet = () => {
 
     console.log("Private Key", wallet.privateKey);
     console.log("Wallet Address", wallet.address);
-    console.log("Wallet Mneumonic", wallet.mnemonic);
+    console.log("Wallet Mneumonic", wallet.mnemonic.phrase);
 
+    const walletMnemonic = ethers.Wallet.fromMnemonic(wallet.mnemonic.phrase);
+    console.log(walletMnemonic);
 }
 
 
@@ -20,7 +22,7 @@ function Wallet() {
 
     return(
         <div>
-            <div onClick={createWallet}> Wallet </div>  
+            <button onClick={createWallet}> Create Wallet </button>  
         </div>
     )
 } 
