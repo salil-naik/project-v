@@ -1,9 +1,10 @@
-import Wallet from './components/wallet'
+import Wallet from './components/wallet';
+import {EthereumMainnet, Rinkeby} from './scripts/network.js';
 
 function App() {
   return (
     <div className="App">
-      <Wallet />
+      <Wallet network={Rinkeby}/>
     </div>
   );
 }
