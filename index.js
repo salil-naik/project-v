@@ -9,7 +9,15 @@ require('dotenv').config()
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//CORS
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Headers', '*');
+	next();
+  });
 
+  
+//API constants
 const url = 'https://api.covalenthq.com/v1'
 const key = process.env.COVALENT_API_KEY;
 
