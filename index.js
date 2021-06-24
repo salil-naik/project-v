@@ -94,7 +94,7 @@ app.get('/Transactions/address/:address/chain/:chainID', (req, res) => {
 
 	const address = req.params.address;
 	const chain_id = req.params.chainID;
-	console.log(address, chain_id)
+	
 	try { 
 		fetch(`${url}/${chain_id}/address/${address}/transactions_v2/?key=${key}`,
 			{
@@ -105,7 +105,33 @@ app.get('/Transactions/address/:address/chain/:chainID', (req, res) => {
 			return data.json();
 
 		}).then(response => {
-			console.log(response)
+			
+			res.status(200).json(response.data)
+		})
+
+	} catch (error) {
+		res.status(500).json(error)
+	}
+});
+
+//NFTs
+//Raw
+app.get('/NFTs/address/:address/chain/:chainID', (req, res) => {
+
+	const address = req.params.address;
+	const chain_id = req.params.chainID;
+	
+	try { 
+		fetch(`${url}/${chain_id}/address/${address}/balances_v2/?nft=true&match={"type": "nft"}&page-size=9999&key=${key}`,
+			{
+				headers: { 'content-type': 'application/json' }
+			}
+		).then(data => {
+			
+			return data.json();
+
+		}).then(response => {
+			
 			res.status(200).json(response.data)
 		})
 
