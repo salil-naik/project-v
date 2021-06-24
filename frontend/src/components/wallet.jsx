@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { ethers } from "ethers";
+import axios from 'axios';
 
 // Need to add edge case for Mneumonic string
 
@@ -28,12 +29,18 @@ const VerifyWallet = (props) => {
 
 const WalletAddresses = (props) => {
 
+    console.log(props);
+
     return(
+        <div> 
         <table> 
+            <thead> 
             <tr>
             <th> Private Key </th>
             <th> Public Key </th>
             </tr>
+            </thead>
+            <tbody> 
             {
                 props.address.map((element,index) => {
                     return (
@@ -45,14 +52,42 @@ const WalletAddresses = (props) => {
                         )
                 })
             }
+            </tbody>
 
         </table>
+        <table> 
+        <thead> 
+            <tr>
+            <th> Token </th>
+            <th> Balance </th>
+            </tr>
+            </thead>
+            <tbody> 
+                {
+                    props.balances.map(element => {
+                        return(
+                            <tr>
+                            <th> {element.contract_ticker_symbol} </th>
+                            <th> {((element.balance) / Math.pow(10, element.contract_decimals))} </th>
+                            </tr>
+                        )
+                    })
+                }
+            </tbody>
+        </table>
+        </div>
     )
 }
 
 const Transaction = (props) => {
 
-    const provider = new ethers.providers.JsonRpcProvider(props.network);
+    console.log(props.network);
+
+    // Network By default is Kovan
+    let networkChosen = props.network;
+    
+
+    const provider = new ethers.providers.JsonRpcProvider(networkChosen);
     const signer = provider.getSigner()
 
 
@@ -65,10 +100,12 @@ const Transaction = (props) => {
 
         console.log(wallet);
 
+        let sendAddressInput = document.getElementById('send-address-input').value;
+        let sendTokenInput = document.getElementById('send-token-input').value;
 
         let tx = {
-            to: "0xbbbaaD77908e7143B6b4D5922fd201cd08568f63",
-            value: ethers.utils.parseEther("1.0")
+            to: sendAddressInput,
+            value: ethers.utils.parseEther(sendTokenInput)
           }
           
           // Signing a transaction
@@ -79,8 +116,10 @@ const Transaction = (props) => {
     }
 
     return(
-        <div> 
-            <button onClick={sendEth}> Send 1 eth </button>
+        <div>
+            <input id="send-token-input" placeholder="1 ETH" required/>
+            <input id="send-address-input" placeholder="0xbbbaaD77908e7143B6b4D543abefd08568f63" required/>
+            <button onClick={sendEth}> Send </button>
         </div>
     )
 }
@@ -92,11 +131,14 @@ function Wallet(props) {
     const [address, setAddress] = useState([]);
     const [verified, setVerified] = useState(false);
     const [selectedAddress, SetSelectedAddress] = useState();
+    // Default is Kovan
+    const [network, SetNetwork] = useState(props.network.kovan.rpc);
+    const [balances, setBalances] = useState([]);
+
 
     const createWallet = () => {
         const wallet = ethers.Wallet.createRandom();
         setMnemonic(wallet.mnemonic.phrase);
-        // console.log("Wallet Mneumonic", wallet.mnemonic.phrase);
     }
     
     const setupWallet = () => {
@@ -107,6 +149,7 @@ function Wallet(props) {
             address : walletMnemonic.address,
             privateKey : walletMnemonic.privateKey
         }])
+
     }
 
     const addNewAddress = () => {
@@ -118,10 +161,57 @@ function Wallet(props) {
             address : walletMnemonic.address,
             privateKey : walletMnemonic.privateKey
         }])
+
+        getBalance();
+    }
+
+    const getBalance = () => {
+        let networkChosen = props.network;
+    
+        const provider = new ethers.providers.JsonRpcProvider(networkChosen);
+    
+        axios.get(`https://Project-v-backend.vishnuduttk.repl.co/address?address=${address[0].address}`)
+            .then(result => {
+                console.log(result.data.data);
+                setBalances(result.data.data.items)
+            })
+    
+    }
+
+    const changeNetwork = (input) => {
+        switch(input) {
+            case "kovan":
+                SetNetwork(props.network.kovan.rpc)
+                break;
+
+            case "ethereum":
+                SetNetwork(props.network.ethereumMainnet.rpc)
+                break;
+            
+            case "fantom-testnet":
+                SetNetwork(props.network.fantomTestnet.rpc)
+                break;
+
+            case "fantom-mainnet":
+                SetNetwork(props.network.fantomMainnet.rpc)
+                break;
+        }
     }
 
     return(
         <div>
+
+            <div style={{display: "flex", justifyContent : "flex-end"}}>
+                <label htmlFor="network">Choose a network:</label> 
+
+                <select defaultValue="kovan" name="network" id="network-connected" onChange={(e) => changeNetwork(e.target.value)}>
+                <option value="kovan">Kovan</option>
+                <option value="ethereum">Etheruem Mainnet</option>
+                <option value="fantom-testnet">Fantom Testnet</option>
+                <option value="fantom-mainnet">Fantom Mainnet</option>
+                </select>
+            </div>
+
             <button onClick={createWallet}> Create Wallet </button> 
 
             <p> Wallet Seed Phrase : {mnemonic} </p>
@@ -131,14 +221,14 @@ function Wallet(props) {
             {
                 verified ? 
                 <div>
-                    <WalletAddresses address={address}/>
+                    <WalletAddresses network={props.network.kovan.rpc} address={address} balances={balances}/>
                     <button onClick={addNewAddress}> Add new address </button>
                 </div>
 
                 : <div> Not Verified </div>
             }
             
-            <Transaction network={props.network} address={address}/>
+            <Transaction network={network} address={address}/>
 
         </div>
     )
