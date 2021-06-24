@@ -3,6 +3,18 @@ import { useState, useEffect } from 'react';
 import { ethers } from "ethers";
 import axios from 'axios';
 
+import UserWallet from './userWallet.jsx';
+
+import "../css/wallet.css"
+
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useHistory
+  } from "react-router-dom";
+
 // Need to add edge case for Mneumonic string
 
 const VerifyWallet = (props) => {
@@ -22,110 +34,16 @@ const VerifyWallet = (props) => {
         <div>
             <div> Please verify your wallet Mneumonic : </div>
             <input id="verify-mnemonic" type="text" />
-            <button onClick={checkMnemonic}> Verify </button>
-        </div>
-    )
-}
-
-const WalletAddresses = (props) => {
-
-    console.log(props);
-
-    return(
-        <div> 
-        <table> 
-            <thead> 
-            <tr>
-            <th> Private Key </th>
-            <th> Public Key </th>
-            </tr>
-            </thead>
-            <tbody> 
-            {
-                props.address.map((element,index) => {
-                    return (
-                        <tr key={index}>
-                            <th> {element.privateKey} </th>
-                            <th> {element.address}</th>
-
-                        </tr>
-                        )
-                })
-            }
-            </tbody>
-
-        </table>
-        <table> 
-        <thead> 
-            <tr>
-            <th> Token </th>
-            <th> Balance </th>
-            </tr>
-            </thead>
-            <tbody> 
-                {
-                    props.balances.map(element => {
-                        return(
-                            <tr>
-                            <th> {element.contract_ticker_symbol} </th>
-                            <th> {((element.balance) / Math.pow(10, element.contract_decimals))} </th>
-                            </tr>
-                        )
-                    })
-                }
-            </tbody>
-        </table>
-        </div>
-    )
-}
-
-const Transaction = (props) => {
-
-    console.log(props.network);
-
-    // Network By default is Kovan
-    let networkChosen = props.network;
-    
-
-    const provider = new ethers.providers.JsonRpcProvider(networkChosen);
-    const signer = provider.getSigner()
-
-
-    const sendEth = async () => {
-        const walletPrivateKey = new ethers.Wallet(props.address[0].privateKey);
-
-        console.log(walletPrivateKey);
-
-        const wallet = walletPrivateKey.connect(provider)
-
-        console.log(wallet);
-
-        let sendAddressInput = document.getElementById('send-address-input').value;
-        let sendTokenInput = document.getElementById('send-token-input').value;
-
-        let tx = {
-            to: sendAddressInput,
-            value: ethers.utils.parseEther(sendTokenInput)
-          }
-          
-          // Signing a transaction
-          await wallet.sendTransaction(tx)
-          .then(result => {
-              console.log(result);
-          })
-    }
-
-    return(
-        <div>
-            <input id="send-token-input" placeholder="1 ETH" required/>
-            <input id="send-address-input" placeholder="0xbbbaaD77908e7143B6b4D543abefd08568f63" required/>
-            <button onClick={sendEth}> Send </button>
+            <button > 
+            <Link onClick={checkMnemonic} to="/wallet"> Verify </Link>
+            </button>
         </div>
     )
 }
 
 
 function Wallet(props) {
+
 
     const [mnemonic, setMnemonic] = useState(null);
     const [address, setAddress] = useState([]);
@@ -139,6 +57,11 @@ function Wallet(props) {
     const createWallet = () => {
         const wallet = ethers.Wallet.createRandom();
         setMnemonic(wallet.mnemonic.phrase);
+
+        const modal = document.getElementsByClassName('create-wallet-modal')[0];
+        modal.style.display = "grid";
+        modal.style.justifyContent = "center";
+        modal.style.justifyContent = "center";
     }
     
     const setupWallet = () => {
@@ -199,38 +122,26 @@ function Wallet(props) {
     }
 
     return(
-        <div>
-
-            <div style={{display: "flex", justifyContent : "flex-end"}}>
-                <label htmlFor="network">Choose a network:</label> 
-
-                <select defaultValue="kovan" name="network" id="network-connected" onChange={(e) => changeNetwork(e.target.value)}>
-                <option value="kovan">Kovan</option>
-                <option value="ethereum">Etheruem Mainnet</option>
-                <option value="fantom-testnet">Fantom Testnet</option>
-                <option value="fantom-mainnet">Fantom Mainnet</option>
-                </select>
-            </div>
-
+        <Router>
+            <Switch> 
+            <Route path="/" exact> 
             <button onClick={createWallet}> Create Wallet </button> 
+
+            <div className="create-wallet-modal"> 
 
             <p> Wallet Seed Phrase : {mnemonic} </p>
 
-            <VerifyWallet mnemonic={mnemonic} setupWallet={setupWallet} setVerified={setVerified}/>
+            <VerifyWallet mnemonic={mnemonic} setupWallet={setupWallet} setVerified={setVerified} />
 
-            {
-                verified ? 
-                <div>
-                    <WalletAddresses network={props.network.kovan.rpc} address={address} balances={balances}/>
-                    <button onClick={addNewAddress}> Add new address </button>
-                </div>
+            </div>
+            </Route>
 
-                : <div> Not Verified </div>
-            }
-            
-            <Transaction network={network} address={address}/>
+            <Route path="/wallet"> 
+            <UserWallet changeNetwork={changeNetwork} verified={verified} network={props.network.kovan.rpc} address={address} balances={balances} addNewAddress={addNewAddress}/>
+            </Route>
 
-        </div>
+            </Switch>
+        </Router>
     )
 } 
 
