@@ -14,12 +14,15 @@ const url = 'https://api.covalenthq.com/v1'
 const key = process.env.COVALENT_API_KEY;
 
 
-//Routes
+// *****  Routes *******
 
-app.get('/index', (req, res) => {
-	res.status(200).json({ msg: "Welcome" })
-})
+//Home
+app.get('/', (req, res) => {
+	res.status(200).json({ msg: "Hello World" })
+});
 
+//Token Balances Endpoints
+//Formatted
 app.get('/TokenBalances/address/:address/chain/:chainID/', (req, res) => {
 	const address = req.params.address;
 	const chain_id = req.params.chainID;
@@ -61,6 +64,7 @@ app.get('/TokenBalances/address/:address/chain/:chainID/', (req, res) => {
 	}
 });
 
+//Raw
 app.get('/TokenBalances/address/:address/chain/:chainID/raw', (req, res) => {
 
 	const address = req.params.address;
@@ -84,9 +88,9 @@ app.get('/TokenBalances/address/:address/chain/:chainID/raw', (req, res) => {
 	}
 });
 
-//error Handling set up
+//Error Handling (404 endpoint not found)
 app.use((req, res, next) => {
-	const error = new Error('404 Page Not found');
+	const error = new Error('404 Endpoint Not found');
 	error.status = 404;
 	next(error);
 });
