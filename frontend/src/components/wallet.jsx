@@ -7,6 +7,10 @@ import UserWallet from './userWallet.jsx';
 
 import "../css/wallet.css"
 
+import AES from "crypto-js/aes";
+import {enc} from "crypto-js";
+
+
 import {
     BrowserRouter as Router,
     Switch,
@@ -21,10 +25,19 @@ const VerifyWallet = (props) => {
 
     const checkMnemonic = () => {
         if(document.getElementById('verify-mnemonic').value === props.mnemonic) {
+
+            const key = document.getElementById('add-wallet-password').value;
+            const m = props.mnemonic;
+
             console.log("Verified!")
             props.setupWallet();
             props.setVerified(true);
+
+            
+            const encrypted = AES.encrypt( JSON.stringify({ m }), key).toString();
+            localStorage.setItem('project_v_w', encrypted);
         }
+
         else {
             console.log("Please try again.");
         }
@@ -32,11 +45,44 @@ const VerifyWallet = (props) => {
 
     return(
         <div>
-            <div> Please verify your wallet Mneumonic : </div>
+            <label htmlFor="verify-mnemonic"> Verify Mnemonic </label>
             <input id="verify-mnemonic" type="text" />
-            <button > 
-            <Link onClick={checkMnemonic} to="/wallet"> Verify </Link>
-            </button>
+            <br />
+            <label htmlFor="add-wallet-password"> Add a wallet password </label>
+            <input id="add-wallet-password" type="text" />
+            <br />
+            <Link onClick={checkMnemonic} to="/wallet"> <button> Verify </button> </Link>
+
+        </div>
+    )
+}
+
+const ImportWallet = (props) => {
+
+    const checkMnemonic = () => {
+            let mnemonic = document.getElementById('import-mnemonic').value;
+
+            const key = document.getElementById('add-wallet-password').value;
+            const m = props.mnemonic;
+
+            console.log("Verified!")
+            props.setupWallet();
+            props.setVerified(true);
+
+            const encrypted = AES.encrypt( JSON.stringify({ m }), key).toString();
+            localStorage.setItem('project_v_w', encrypted);
+    }
+
+    return(
+        <div>
+            <label htmlFor="import-mnemonic" onChange={(e) => {props.setMnemonic(e.target.value)}}> Import Mnemonic </label>
+            <input id="import-mnemonic" type="text" />
+            <br />
+            <label htmlFor="add-wallet-password"> Add a wallet password </label>
+            <input id="add-wallet-password" type="text" />
+            <br />
+            <Link onClick={checkMnemonic} to="/wallet"> <button> Verify </button> </Link>
+
         </div>
     )
 }
@@ -44,6 +90,7 @@ const VerifyWallet = (props) => {
 
 function Wallet(props) {
 
+    let history = useHistory();
 
     const [mnemonic, setMnemonic] = useState(null);
     const [address, setAddress] = useState([]);
@@ -59,6 +106,14 @@ function Wallet(props) {
         setMnemonic(wallet.mnemonic.phrase);
 
         const modal = document.getElementsByClassName('create-wallet-modal')[0];
+        modal.style.display = "grid";
+        modal.style.justifyContent = "center";
+        modal.style.justifyContent = "center";
+
+    }
+
+    const importWallet = () => {
+        const modal = document.getElementsByClassName('import-wallet-modal')[0];
         modal.style.display = "grid";
         modal.style.justifyContent = "center";
         modal.style.justifyContent = "center";
@@ -121,17 +176,65 @@ function Wallet(props) {
         }
     }
 
+    const unlockWallet = () => {
+        let password = document.getElementById('wallet-password').value;
+        let encrypted = localStorage.getItem('project_v_w');
+        const decrypted = AES.decrypt(encrypted, password);
+        console.log(decrypted);
+
+        try {
+            let decryptedText = decrypted.toString(enc.Utf8);
+            let finalDecryptedText = JSON.parse(decryptedText)
+            // var originalText = bytes.toString();
+            let mnemonic = finalDecryptedText.m;
+            // console.log(history);
+            setVerified(true);
+
+            const walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/0`);
+
+            setAddress(arr => [...arr, {
+                address : walletMnemonic.address,
+                privateKey : walletMnemonic.privateKey
+            }])
+
+            history.push('/wallet');
+
+        }
+
+        catch(err) {
+            console.log(err);
+        }
+
+    }
+
+  
+
     return(
-        <Router>
+        
             <Switch> 
             <Route path="/" exact> 
+            <div> 
+                <label htmlFor="wallet-password"> Wallet password </label>
+                <input id="wallet-password" placeholder="password"/>
+                <button onClick={unlockWallet}> Unlock wallet</button>
+            </div>
             <button onClick={createWallet}> Create Wallet </button> 
+            <button onClick={importWallet}> Import Wallet </button> 
 
+        
             <div className="create-wallet-modal"> 
 
             <p> Wallet Seed Phrase : {mnemonic} </p>
-
+            
             <VerifyWallet mnemonic={mnemonic} setupWallet={setupWallet} setVerified={setVerified} />
+
+            </div>
+
+            <div className="import-wallet-modal"> 
+
+            <p> Add your seed Phrase below </p>
+
+            <ImportWallet setMnemonic={setMnemonic} mnemonic={mnemonic} setupWallet={setupWallet} setVerified={setVerified} />
 
             </div>
             </Route>
@@ -141,7 +244,7 @@ function Wallet(props) {
             </Route>
 
             </Switch>
-        </Router>
+
     )
 } 
 
