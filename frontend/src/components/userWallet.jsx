@@ -1,48 +1,56 @@
 
 import { ethers } from "ethers";
 
+import {useEffect, useState} from 'react';
+
+import axios from 'axios';
+
+
 const WalletAddresses = (props) => {
 
-    console.log(props);
+    const changeAddress = (value) => {
+        props.changeData(props.address[value].address, props.address[value].privateKey)
+
+        // props.SetCurrentAddressChosen();
+        // props.SetCurrentPrivateKeyChosen();
+    }
 
     return(
         <div> 
-        <table> 
-            <thead> 
-            <tr>
-            <th> Private Key </th>
-            <th> Public Key </th>
-            </tr>
-            </thead>
-            <tbody> 
-            {
-                props.address.map((element,index) => {
-                    return (
-                        <tr key={index}>
-                            <th> {element.privateKey} </th>
-                            <th> {element.address}</th>
+            <div style={{display: "flex", justifyContent: "flex-end"}}>
 
-                        </tr>
-                        )
-                })
-            }
-            </tbody>
+                <label htmlFor="current-address"> Choose Address : </label> 
 
-        </table>
+                <select name="current-address" id="current-address" onChange={(e) => changeAddress(e.target.value)}> 
+                    {
+                        props.address.map((element, index) => {
+                            return(
+                                <option value={index} key={index}> {element.address} </option>
+                            )
+                        })
+                    }
+
+                </select>
+            </div>
+            <div>  <p> Chosen address : {props.currentAddressChosen} </p> </div>
         <table> 
         <thead> 
+
             <tr>
-            <th> Token </th>
-            <th> Balance </th>
+            <th> Balances </th>
             </tr>
             </thead>
             <tbody> 
                 {
-                    props.balances.map(element => {
+                    props.balances.map((element, index) => {
                         return(
-                            <tr>
+                            <tr key={index}>
+                            <th> <img src={element.logo_url} width="20px" /></th>
                             <th> {element.contract_ticker_symbol} </th>
-                            <th> {((element.balance) / Math.pow(10, element.contract_decimals))} </th>
+                            <th> {element.balance} </th>
+                            <th> {element.USD_value} </th>
+                            <th> Send </th>
+                            <th> Deposit </th>
                             </tr>
                         )
                     })
@@ -55,7 +63,7 @@ const WalletAddresses = (props) => {
 
 const Transaction = (props) => {
 
-    console.log(props.network);
+    // console.log(props.network);
 
     // Network By default is Kovan
     let networkChosen = props.network;
@@ -66,7 +74,7 @@ const Transaction = (props) => {
 
 
     const sendEth = async () => {
-        const walletPrivateKey = new ethers.Wallet(props.address[0].privateKey);
+        const walletPrivateKey = new ethers.Wallet(props.currentPrivateKeyChosen);
 
         console.log(walletPrivateKey);
 
@@ -99,9 +107,47 @@ const Transaction = (props) => {
 }
 
 function UserWallet(props) {
+
+    const [currentAddressChosen, SetCurrentAddressChosen] = useState(props.address[0].address);
+    const [currentPrivateKeyChosen, SetCurrentPrivateKeyChosen] = useState(props.address[0].privateKey);
+
+
+    // useEffect(() => {
+    //     SetCurrentAddressChosen();
+    //     SetCurrentPrivateKeyChosen();
+
+    // }, [])
+
+    const getBalance = () => {
+        let networkChosen = props.network;
+
+        console.log(currentAddressChosen);
+    
+        const provider = new ethers.providers.JsonRpcProvider(networkChosen);
+        // console.log(chainID);
+        axios.get(`https://project-v.salilnaik.repl.co/TokenBalances/address/${currentAddressChosen}/chain/${props.chainID}/`)
+            .then(result => {
+                console.log(result.data.tokens);
+                props.setBalances(result.data.tokens)
+            })
+            .catch(err => console.log(err));
+    }
+
+
+    const changeData = (add, priv) => {
+        SetCurrentAddressChosen(add);
+        SetCurrentPrivateKeyChosen(priv);
+    }
+
+    const gettt = () => {
+    setInterval(()=> {
+        getBalance();
+    }, 5000);
+    }
+
     return(
         <div>
-            
+            <p onClick={gettt}>  {currentAddressChosen}</p>
             <div style={{display: "flex", justifyContent : "flex-end"}}>
                 <label htmlFor="network">Choose a network:</label> 
 
@@ -116,7 +162,7 @@ function UserWallet(props) {
             {
                 props.verified ? 
                 <div>
-                    <WalletAddresses network={props.network} address={props.address} balances={props.balances}/>
+                    <WalletAddresses network={props.network} address={props.address} balances={props.balances} changeData={changeData} currentAddressChosen={props.currentAddressChosen}/>
                     <button onClick={props.addNewAddress}> Add new address </button>
                 </div>
 
@@ -124,7 +170,7 @@ function UserWallet(props) {
             }
         
             
-            <Transaction network={props.network} address={props.address}/>
+            <Transaction network={props.network} currentAddressChosen={currentAddressChosen} currentPrivateKeyChosen= {currentPrivateKeyChosen} />
             
         </div>
     )
