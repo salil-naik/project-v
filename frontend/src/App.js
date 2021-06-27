@@ -1,5 +1,4 @@
 import Wallet from './components/wallet';
-import Search from './components/Search/search'
 import {network} from './scripts/network.js';
 import "./App.css";
 
@@ -16,8 +15,6 @@ import {Home} from "./pages/home/index";
 function App() {
   return (
     <div className="App">
-      {/* <Search /> */}
-
       {/* <Wallet network = {network}/> */}
       <Home />
     </div>
