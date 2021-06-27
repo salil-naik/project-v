@@ -4,4 +4,19 @@
     height : 300px;
     justify-content: space-between;
     align-items: center;
-} */
+    background: linear-gradient(99.01deg, #241642 10.95%, #191B1F 93.26%);
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.flex{
+    display: flex;
+    height: 100%;
+}
+
+.f-center{
+    align-items: center;
+    justify-content: center;
+}
