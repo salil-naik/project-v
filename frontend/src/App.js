@@ -19,8 +19,8 @@ function App() {
 
       {/* <div> */}
 
-      {/* <Wallet/> */}
-      <Home />
+      <Wallet/>
+      {/* <Home /> */}
     </div>
   );
 }
