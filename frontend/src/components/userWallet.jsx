@@ -69,22 +69,17 @@ const WalletAddresses = (props) => {
                 </table>
                 : 
                 <div> 
-                    <div> Transactions of {props.transactions.address}</div>
 
                     <div> 
                         <div>
-                            <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/>
+                            {/* <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/>
                             <div> Fantom </div> 
                             <div> 10 FTM </div>
                             <div> $100 </div>
-                            <div> Received </div>
+                            <div> Received </div> */}
 
                         </div>
-                        {
-                            props.transactions.items.map((element) => {
-                                console.log(element);
-                            })
-                        }
+  
                     </div>
                 </div>
             }
@@ -235,7 +230,7 @@ function UserWallet(props) {
 
         axios.get(`https://project-v.salilnaik.repl.co/TokenBalances/address/${props.address[currentAddress].address}/chain/${chainID}/`)
             .then(result => {
-                // console.log(result.data.tokens);
+                console.log(result.data.tokens);
                 setBalances(result.data.tokens)
                 return true;
             })

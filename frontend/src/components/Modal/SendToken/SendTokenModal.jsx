@@ -10,6 +10,10 @@ import { ethers } from "ethers";
 export const SendTokenModal = ({ open, onClose, prevModal, data, network, walletData }) => {
   const [tokenAddress, SetTokenAddress] = useState("");
   const [receiverAddress, SetReceiverAddress] = useState("");
+  const [amount, SetAmount] = useState(0);
+  const [decimal, SetDecimal] = useState(null);
+
+
 
 
 
@@ -22,19 +26,42 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
 
       const walletPrivateKey = new ethers.Wallet(walletData.privateKey);
 
-      // const tx = {
-      //   // from : walletData.privateKey,
-      //   to : receiverAddress,
-      //   value : ethers.utils.parseEther(send_token_amount),
-      //   nonce : window.ethersProvider.getTransactionCount(send_account, 'latest'),
-      //   gasLimit : ethers.utils.hexlify(gas_limit), // 100000
-      //   gasPrice : gas_price
-      // }
+      const wallet = walletPrivateKey.connect(provider)
+
+      wallet.getGasPrice().then(price => {
+        let gas_price = ethers.utils.hexlify(parseInt(price));
+        console.log(`gas_price: ${ gas_price }`);
+
+
+     const tx = {  
+        to : receiverAddress,
+        value : (amount * Math.pow(10, decimal)),
+        // nonce : wallet.getTransactionCount(walletData.address, 'latest'),
+        // gasLimit : ethers.utils.hexlify('0x100000')// 100000
+        gasPrice : gas_price
+      }
+
+      try{
+        wallet.sendTransaction(tx).then((transaction) => 
+        {
+            console.dir(transaction);
+            alert('Send finished!');
+        });
+        } catch(error){
+            alert("failed to send!!");
+        }
+      });
+
       
     }
 
 
   };
+
+  const SetIndexToTokenAddress = (index) => {
+    SetTokenAddress(data[index].contract_address);
+    SetDecimal(data[index].decimals);
+  }
 
 
   return (
@@ -45,16 +72,16 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
         {/* {console.log("network", network )} */}
 
 
-        <label for="crypto-to-send"> Choose Crypto </label>
+        <label htmlFor="crypto-to-send"> Choose Crypto </label>
         <Select
           labelId="crypto-to-send"
           id="crypto-to-send"
-          onChange={(e) => SetTokenAddress(e.target.value)}
+          onChange={(e) => SetIndexToTokenAddress(e.target.value)}
         >
           {
             data.map((element, index) => {
                 return(
-                  <MenuItem key={index} value={element.contract_address}> {element.contract_ticker_symbol} : {element.contract_name} </MenuItem>
+                  <MenuItem key={index} value={index}> {element.contract_ticker_symbol} : {element.contract_name} </MenuItem>
                 )
             })
           }
@@ -76,10 +103,10 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
           <Input
           Label="Amount"
           Id="Enter Amount"
-          Type="text"
-          Name="Receiver Address"
+          Type="number"
+          Name="Amount"
           OnChange={(e) => {
-            SetReceiverAddress(e.target.value);
+            SetAmount(e.target.value);
           }}
           Required
         /> 
