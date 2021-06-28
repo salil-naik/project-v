@@ -24,7 +24,7 @@ import {
 const VerifyWallet = (props) => {
 
     const checkMnemonic = () => {
-        if(document.getElementById('verify-mnemonic').value === props.mnemonic) {
+        if(document.getElementById('verify-mnemonic').value.trim() === props.mnemonic) {
 
             const key = document.getElementById('add-wallet-password').value;
             const m = props.mnemonic;
@@ -34,7 +34,7 @@ const VerifyWallet = (props) => {
             props.setVerified(true);
 
             
-            const encrypted = AES.encrypt( JSON.stringify({ m }), key).toString();
+            const encrypted = AES.encrypt( JSON.stringify({ m }), key.trim()).toString();
             localStorage.setItem('project_v_w', encrypted);
         }
 
@@ -60,14 +60,18 @@ const VerifyWallet = (props) => {
 const ImportWallet = (props) => {
 
     const checkMnemonic = () => {
-            let mnemonic = document.getElementById('import-mnemonic').value;
+            let mnemonic = document.getElementById('import-mnemonic').value.trim();
 
-            const key = document.getElementById('add-wallet-password').value;
+            props.setMnemonic(mnemonic)
+
+            const key = document.getElementById('import-wallet-password').value.trim();
             const m = props.mnemonic;
 
             console.log("Verified!")
             props.setupWallet();
             props.setVerified(true);
+
+            console.log(m, key);
 
             const encrypted = AES.encrypt( JSON.stringify({ m }), key).toString();
             localStorage.setItem('project_v_w', encrypted);
@@ -76,10 +80,10 @@ const ImportWallet = (props) => {
     return(
         <div>
             <label htmlFor="import-mnemonic" onChange={(e) => {props.setMnemonic(e.target.value)}}> Import Mnemonic </label>
-            <input id="import-mnemonic" type="text" />
+            <input id="import-mnemonic" type="text"/>
             <br />
-            <label htmlFor="add-wallet-password"> Add a wallet password </label>
-            <input id="add-wallet-password" type="text" />
+            <label htmlFor="import-wallet-password"> Add a wallet password </label>
+            <input id="import-wallet-password" />
             <br />
             <Link onClick={checkMnemonic} to="/wallet"> <button> Verify </button> </Link>
 
@@ -98,13 +102,17 @@ function Wallet(props) {
     const [selectedAddress, SetSelectedAddress] = useState();
     // Default is Kovan
     const [network, SetNetwork] = useState(props.network.kovan.rpc);
+    const [chainID, SetChainID] = useState(props.network.kovan.chainID);
     const [balances, setBalances] = useState([]);
+
 
 
     const createWallet = () => {
         const wallet = ethers.Wallet.createRandom();
         setMnemonic(wallet.mnemonic.phrase);
 
+        const otherModal = document.getElementsByClassName('import-wallet-modal')[0];
+        otherModal.style.display = "none";
         const modal = document.getElementsByClassName('create-wallet-modal')[0];
         modal.style.display = "grid";
         modal.style.justifyContent = "center";
@@ -113,6 +121,8 @@ function Wallet(props) {
     }
 
     const importWallet = () => {
+        const otherModal = document.getElementsByClassName('create-wallet-modal')[0];
+        otherModal.style.display = "none";
         const modal = document.getElementsByClassName('import-wallet-modal')[0];
         modal.style.display = "grid";
         modal.style.justifyContent = "center";
@@ -133,51 +143,58 @@ function Wallet(props) {
     const addNewAddress = () => {
 
         const number = address.length;
+        console.log(number);
+        console.log(mnemonic);
+
         const walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/${number}`);
 
         setAddress(arr => [...arr, {
             address : walletMnemonic.address,
             privateKey : walletMnemonic.privateKey
         }])
-
-        getBalance();
     }
 
-    const getBalance = () => {
-        let networkChosen = props.network;
+    // const getBalance = () => {
+    //     let networkChosen = props.network;
+
+    //     console.log(currentAddressChosen);
     
-        const provider = new ethers.providers.JsonRpcProvider(networkChosen);
-    
-        axios.get(`https://Project-v-backend.vishnuduttk.repl.co/address?address=${address[0].address}`)
-            .then(result => {
-                console.log(result.data.data);
-                setBalances(result.data.data.items)
-            })
-    
-    }
+    //     const provider = new ethers.providers.JsonRpcProvider(networkChosen);
+    //     // console.log(chainID);
+    //     axios.get(`https://project-v.salilnaik.repl.co/TokenBalances/address/${currentAddressChosen}/chain/${chainID}/`)
+    //         .then(result => {
+    //             console.log(result.data.tokens);
+    //             setBalances(result.data.tokens)
+    //         })
+    //         .catch(err => console.log(err));
+    // }
 
     const changeNetwork = (input) => {
         switch(input) {
             case "kovan":
-                SetNetwork(props.network.kovan.rpc)
+                SetNetwork(props.network.kovan.rpc);
+                SetChainID(props.network.kovan.chainID);
                 break;
 
             case "ethereum":
-                SetNetwork(props.network.ethereumMainnet.rpc)
+                SetNetwork(props.network.ethereumMainnet.rpc);
+                SetChainID(props.network.ethereumMainnet.chainID);
                 break;
             
             case "fantom-testnet":
                 SetNetwork(props.network.fantomTestnet.rpc)
+                SetChainID(props.network.fantomTestnet.chainID);
                 break;
 
             case "fantom-mainnet":
-                SetNetwork(props.network.fantomMainnet.rpc)
+                SetNetwork(props.network.fantomMainnet.rpc);
+                SetChainID(props.network.fantomMainnet.chainID);
                 break;
         }
     }
 
     const unlockWallet = () => {
-        let password = document.getElementById('wallet-password').value;
+        let password = document.getElementById('wallet-password').value.trim();
         let encrypted = localStorage.getItem('project_v_w');
         const decrypted = AES.decrypt(encrypted, password);
         console.log(decrypted);
@@ -189,6 +206,8 @@ function Wallet(props) {
             let mnemonic = finalDecryptedText.m;
             // console.log(history);
             setVerified(true);
+
+            setMnemonic(mnemonic)
 
             const walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/0`);
 
@@ -210,14 +229,20 @@ function Wallet(props) {
   
 
     return(
-        
+
             <Switch> 
             <Route path="/" exact> 
-            <div> 
+            {
+                localStorage.getItem('project_v_w') ?
+                <div> 
                 <label htmlFor="wallet-password"> Wallet password </label>
-                <input id="wallet-password" placeholder="password"/>
+                <input id="wallet-password" placeholder="password" type='password'/>
                 <button onClick={unlockWallet}> Unlock wallet</button>
-            </div>
+                </div>
+                : 
+                <div> You don't have a wallet created. </div>
+            }
+
             <button onClick={createWallet}> Create Wallet </button> 
             <button onClick={importWallet}> Import Wallet </button> 
 
@@ -240,7 +265,7 @@ function Wallet(props) {
             </Route>
 
             <Route path="/wallet"> 
-            <UserWallet changeNetwork={changeNetwork} verified={verified} network={props.network.kovan.rpc} address={address} balances={balances} addNewAddress={addNewAddress}/>
+            <UserWallet changeNetwork={changeNetwork} verified={verified} network={props.network.kovan.rpc} address={address} balances={balances} setBalances={setBalances} addNewAddress={addNewAddress} chainID={chainID}/>
             </Route>
 
             </Switch>

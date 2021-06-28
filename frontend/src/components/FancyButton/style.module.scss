@@ -1,0 +1,51 @@
+.section {
+  border-radius: 15px;
+  padding: 40px 20px;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.29);
+  color: white;
+  display: flex;
+  align-items: center;
+  background-color: #2a2b52;
+  cursor: pointer;
+  transition: all 0.3 ease;
+
+  &__title {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+
+  // colors
+  &.violet {
+    background: linear-gradient(99.01deg, #7c5af5 10.95%, #e37bf4 93.26%);
+    &:hover {
+      background: #7c5af5;
+    }
+  }
+
+  &.red {
+    background: linear-gradient(291.54deg, #eb6764 14.09%, #de505a 83.95%);
+    &:hover {
+      background: #de505a;
+    }
+  }
+
+  &.orange {
+    background: linear-gradient(291.54deg, #ffb37f 14.09%, #ff8e4d 83.95%);
+    &:hover {
+      background: #ff8e4d;
+    }
+  }
+
+  &.violet,
+  &.orange,
+  &.red {
+    transition: all 0.3 ease;
+  }
+}
