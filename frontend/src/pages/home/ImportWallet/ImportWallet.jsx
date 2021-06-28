@@ -1,10 +1,11 @@
 import { ImportWalletModal } from "../../../components/Modal/ImportWalletSection/ImportWalletModal/index";
 
-export const ImportWallet = ({ importWalletData }) => {
+export const ImportWallet = ({ data }) => {
   return (
     <ImportWalletModal
-      open={importWalletData.open}
-      onClose={importWalletData.close}
+      open={data.open}
+      onClose={data.close}
+      onClick={data.onClick}
     />
   );
 };

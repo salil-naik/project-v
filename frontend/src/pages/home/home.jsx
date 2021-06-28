@@ -10,7 +10,7 @@ import { Container, Grid } from "@material-ui/core";
 import { FancyButton } from "../../components/FancyButton/index";
 import { CreateWalletModal } from "../../components/Modal/CreateWalletModal/index";
 import { VerifyWalletModal } from "../../components/Modal/VerifyWalletModal/index";
-import {ImportWallet} from "./ImportWallet/index";
+import { ImportWallet } from "./ImportWallet/index";
 
 // CSS
 import style from "./home.module.scss";
@@ -25,7 +25,6 @@ export const Home = () => {
 
   // for import wallet
   const [importWalletState, setImportWalletState] = useState(false);
-
 
   // functions to open/close the modals
 
@@ -90,15 +89,27 @@ export const Home = () => {
   };
 
   // Import Wallet
-  
+
   const importWallet = () => {
     setImportWalletState(true);
-  }
+  };
 
-  const importWalletData={
-    open:importWalletState,
-    close:handleClose,
-  }
+  const checkMnemonic = (userMnemonic, userPw) => {
+    setMnemonic(userMnemonic.trim());
+    const key = userPw;
+    const m = mnemonic;
+    setupWallet();
+
+    const encrypted = AES.encrypt(JSON.stringify({ m }), key).toString();
+    localStorage.setItem("project_v_w", encrypted);
+    setVerified(true);
+  };
+
+  const importWalletData = {
+    open: importWalletState,
+    close: handleClose,
+    onClick: checkMnemonic,
+  };
 
   if (verified) {
     return <Redirect to="/wallet" />;
@@ -159,7 +170,7 @@ export const Home = () => {
         />
 
         {/* Import Wallet Section */}
-        <ImportWallet importWalletData={importWalletData}/>
+        <ImportWallet data={importWalletData} />
       </>
     );
   }
