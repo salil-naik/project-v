@@ -7,7 +7,6 @@ import { ethers } from "ethers";
 // pages
 import { Home } from "./pages/Home/index";
 import { Wallet } from "./pages/Wallet/index";
-import Explore from "./pages/Explore/Explore";
 import { Navbar } from "./components/Navbar/index";
 import { Explore } from "./pages/Explore/index";
 
