@@ -91,8 +91,6 @@
   
 //                   break;
 //           }
-      
-  
 //       }
   
 //       const getBalance = () => {
@@ -125,8 +123,6 @@
   
 //     return (
 //         <div style={{color : "white"}}>
-//                 {/* <div onClick={getBalance}>{ props.address[currentAddress].address }</div>  */}
-
 //             {
 //                 props.verified ? 
 //                 <div>
@@ -151,8 +147,7 @@
 //                 : <div> Not Verified </div>
 //             }
 
-        
-
+    
 //             <Transaction network={network} address={props.address} />
             
 //             <ReceiveTokenModal
