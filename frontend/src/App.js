@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 // pages
 import { Home } from "./pages/Home/index";
 import { Wallet } from "./pages/Wallet/index";
+import Explore from './pages/Explore/Explore';
 import { Navbar } from "./components/Navbar/index";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/wallet">
           <Wallet/>
         </Route>
+        <Route path="/address/:address" component={Explore} />
       </Switch>
     </Router>
   );
