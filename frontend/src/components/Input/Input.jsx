@@ -7,8 +7,8 @@ export const Input = ({
   Id,
   Type,
   Placeholder,
-  Required,
   OnChange,
+  Required,
 }) => {
   return (
     <div className={style.inputContainer}>
@@ -24,6 +24,7 @@ export const Input = ({
         value={Value}
         required={Required}
         onChange={OnChange}
+        autoComplete="off"
       />
     </div>
   );
