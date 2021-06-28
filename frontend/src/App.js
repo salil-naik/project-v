@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { network } from "./scripts/network.js";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -7,9 +7,9 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Home } from "./pages/Home/index";
 import { Wallet } from "./pages/Wallet/index";
 import { Navbar } from "./components/Navbar/index";
+import { Explore } from "./pages/Explore/index";
 
 function App() {
-
   const [address, SetAddress] = useState();
 
   return (
@@ -21,7 +21,11 @@ function App() {
         </Router>
 
         <Route path="/wallet">
-          <Wallet/>
+          <Wallet />
+        </Route>
+
+        <Route path="/address/:address">
+          <Explore />
         </Route>
       </Switch>
     </Router>
