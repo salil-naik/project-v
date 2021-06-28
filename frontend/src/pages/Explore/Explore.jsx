@@ -69,7 +69,7 @@ function Explore({ match }) {
     }
     return (
         <div>
-            <Search address={address} />
+            
             <br />
             <label>Choose network:</label>
             <select onChange={getNetwork}>
