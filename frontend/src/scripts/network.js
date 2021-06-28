@@ -1,4 +1,4 @@
-export const network = {
+export const networkData = {
     ethereumMainnet : {
         rpc : "https://eth-mainnet.alchemyapi.io/v2/Hoq2ORelL-pxtuQQE903j61xB_WAQdtj",
         explorer : "https://etherscan.io/",

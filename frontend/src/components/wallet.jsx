@@ -102,11 +102,6 @@ function Wallet(props) {
     const [verified, setVerified] = useState(false);
     const [selectedAddress, SetSelectedAddress] = useState();
     // Default is Kovan
-    const [network, SetNetwork] = useState(props.network.kovan.rpc);
-    const [chainID, SetChainID] = useState(props.network.kovan.chainID);
-    const [balances, setBalances] = useState([]);
-
-
 
     const createWallet = () => {
         const wallet = ethers.Wallet.createRandom();
@@ -118,7 +113,6 @@ function Wallet(props) {
         modal.style.display = "grid";
         modal.style.justifyContent = "center";
         modal.style.justifyContent = "center";
-
     }
 
     const importWallet = () => {
@@ -170,29 +164,30 @@ function Wallet(props) {
     //         .catch(err => console.log(err));
     // }
 
-    const changeNetwork = (input) => {
-        switch(input) {
-            case "kovan":
-                SetNetwork(props.network.kovan.rpc);
-                SetChainID(props.network.kovan.chainID);
-                break;
+    // const changeNetwork = (input) => {
+    //     console.log("Network is changing")
+    //     switch(input) {
+    //         case "kovan":
+    //             SetNetwork(props.network.kovan.rpc);
+    //             SetChainID(props.network.kovan.chainID);
+    //             break;
 
-            case "ethereum":
-                SetNetwork(props.network.ethereumMainnet.rpc);
-                SetChainID(props.network.ethereumMainnet.chainID);
-                break;
+    //         case "ethereum":
+    //             SetNetwork(props.network.ethereumMainnet.rpc);
+    //             SetChainID(props.network.ethereumMainnet.chainID);
+    //             break;
             
-            case "fantom-testnet":
-                SetNetwork(props.network.fantomTestnet.rpc)
-                SetChainID(props.network.fantomTestnet.chainID);
-                break;
+    //         case "fantom-testnet":
+    //             SetNetwork(props.network.fantomTestnet.rpc)
+    //             SetChainID(props.network.fantomTestnet.chainID);
+    //             break;
 
-            case "fantom-mainnet":
-                SetNetwork(props.network.fantomMainnet.rpc);
-                SetChainID(props.network.fantomMainnet.chainID);
-                break;
-        }
-    }
+    //         case "fantom-mainnet":
+    //             SetNetwork(props.network.fantomMainnet.rpc);
+    //             SetChainID(props.network.fantomMainnet.chainID);
+    //             break;
+    //     }
+    // }
 
     const unlockWallet = () => {
         let password = document.getElementById('wallet-password').value.trim();
@@ -224,12 +219,10 @@ function Wallet(props) {
         catch(err) {
             console.log(err);
         }
-
     }
 
 
   
-
     return(
 
             <Switch> 
@@ -267,7 +260,7 @@ function Wallet(props) {
             </Route>
 
             <Route path="/wallet"> 
-            <UserWallet changeNetwork={changeNetwork} verified={verified} network={props.network.kovan.rpc} address={address} balances={balances} setBalances={setBalances} addNewAddress={addNewAddress} chainID={chainID}/>
+            <UserWallet verified={verified} address={address} addNewAddress={addNewAddress}/>
             </Route>
 
             <Route path="/address/:address" component={Explore}>
