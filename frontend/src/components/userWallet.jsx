@@ -5,15 +5,11 @@ import {useEffect, useState} from 'react';
 
 import axios from 'axios';
 
+import { networkData } from '../scripts/network'
+
 
 const WalletAddresses = (props) => {
 
-    const changeAddress = (value) => {
-        props.changeData(props.address[value].address, props.address[value].privateKey)
-
-        // props.SetCurrentAddressChosen();
-        // props.SetCurrentPrivateKeyChosen();
-    }
 
     return(
         <div> 
@@ -21,7 +17,7 @@ const WalletAddresses = (props) => {
 
                 <label htmlFor="current-address"> Choose Address : </label> 
 
-                <select name="current-address" id="current-address" onChange={(e) => changeAddress(e.target.value)}> 
+                <select name="current-address" id="current-address" onChange={(e) => props.SetCurrentAddress(e.target.value)}> 
                     {
                         props.address.map((element, index) => {
                             return(
@@ -32,7 +28,6 @@ const WalletAddresses = (props) => {
 
                 </select>
             </div>
-            <div>  <p> Chosen address : {props.currentAddressChosen} </p> </div>
         <table> 
         <thead> 
 
@@ -74,7 +69,7 @@ const Transaction = (props) => {
 
 
     const sendEth = async () => {
-        const walletPrivateKey = new ethers.Wallet(props.currentPrivateKeyChosen);
+        const walletPrivateKey = new ethers.Wallet(props.address[0].privateKey);
 
         console.log(walletPrivateKey);
 
@@ -106,71 +101,147 @@ const Transaction = (props) => {
     )
 }
 
+function Receive() {
+    return(
+        <div> 
+            Deposits
+        </div>
+    )
+}
+
+function Send() {
+    return(
+        <div> 
+            Send
+        </div>
+    )
+}
+
 function UserWallet(props) {
 
-    const [currentAddressChosen, SetCurrentAddressChosen] = useState(props.address[0].address);
-    const [currentPrivateKeyChosen, SetCurrentPrivateKeyChosen] = useState(props.address[0].privateKey);
+    const [network, SetNetwork] = useState(networkData.kovan.rpc);
+    const [chainID, SetChainID] = useState(networkData.kovan.chainID);
+    const [balances, setBalances] = useState([]);
+    const [currentAddress, SetCurrentAddress] = useState(0);
 
 
-    // useEffect(() => {
-    //     SetCurrentAddressChosen();
-    //     SetCurrentPrivateKeyChosen();
+    useEffect(() => {
+        // setInterval(()=> {
+        //     getBalance();
+        // }, 4000);
 
-    // }, [])
+        console.log(networkData);
+    }, [])
+
+    const changeNetwork = (input) => {
+        console.log(input);
+        console.log("Network is changing");
+        switch(input) {
+            case "kovan":
+                SetNetwork(networkData.kovan.rpc);
+                SetChainID(networkData.kovan.chainID);
+                console.log("kovan");
+
+                
+                break;
+
+            case "ethereum":
+                SetNetwork(networkData.ethereumMainnet.rpc);
+                SetChainID(networkData.ethereumMainnet.chainID);
+                console.log("eth");
+
+                break;
+            
+            case "fantom-testnet":
+                SetNetwork(networkData.fantomTestnet.rpc)
+                SetChainID(networkData.fantomTestnet.chainID);
+                console.log("fantom");
+
+                break;
+
+            case "fantom-mainnet":
+                SetNetwork(networkData.fantomMainnet.rpc);
+                SetChainID(networkData.fantomMainnet.chainID);
+                console.log("fantom main");
+
+                break;
+        }
+    
+
+    }
 
     const getBalance = () => {
-        let networkChosen = props.network;
-
-        console.log(currentAddressChosen);
+        let networkChosen = network;
     
         const provider = new ethers.providers.JsonRpcProvider(networkChosen);
-        // console.log(chainID);
-        axios.get(`https://project-v.salilnaik.repl.co/TokenBalances/address/${currentAddressChosen}/chain/${props.chainID}/`)
+        console.log(chainID);
+
+        console.log(props.address[currentAddress].address);
+
+        axios.get(`https://project-v.salilnaik.repl.co/TokenBalances/address/${props.address[currentAddress].address}/chain/${chainID}/`)
             .then(result => {
                 console.log(result.data.tokens);
-                props.setBalances(result.data.tokens)
+                setBalances(result.data.tokens)
             })
             .catch(err => console.log(err));
+
+
+        setTimeout(() => {
+            console.log(chainID, network);
+        }, 10000) 
+    }
+
+    sendToken = () => {
+
+    }
+
+    receiveToken = () => {
+        
     }
 
 
-    const changeData = (add, priv) => {
-        SetCurrentAddressChosen(add);
-        SetCurrentPrivateKeyChosen(priv);
-    }
-
-    const gettt = () => {
-    setInterval(()=> {
-        getBalance();
-    }, 5000);
-    }
 
     return(
         <div>
-            <p onClick={gettt}>  {currentAddressChosen}</p>
-            <div style={{display: "flex", justifyContent : "flex-end"}}>
-                <label htmlFor="network">Choose a network:</label> 
-
-                <select defaultValue="kovan" name="network" id="network-connected" onChange={(e) => props.changeNetwork(e.target.value)}>
-                <option value="kovan">Kovan</option>
-                <option value="ethereum">Etheruem Mainnet</option>
-                <option value="fantom-testnet">Fantom Testnet</option>
-                <option value="fantom-mainnet">Fantom Mainnet</option>
-                </select>
-            </div>
+                <p onClick={getBalance}>{ props.address[currentAddress].address }</p> 
 
             {
                 props.verified ? 
                 <div>
-                    <WalletAddresses network={props.network} address={props.address} balances={props.balances} changeData={changeData} currentAddressChosen={props.currentAddressChosen}/>
-                    <button onClick={props.addNewAddress}> Add new address </button>
+                    <div style={{display: "flex", justifyContent : "flex-end"}}>
+                            <label htmlFor="network">Choose a network:</label> 
+                            <select defaultValue="kovan" name="network" id="network-connected" onChange={(e) => {changeNetwork(e.target.value)}}>
+                            <option value="kovan">Kovan</option>
+                            <option value="ethereum">Etheruem Mainnet</option>
+                            <option value="fantom-testnet">Fantom Testnet</option>
+                            <option value="fantom-mainnet">Fantom Mainnet</option>
+                            </select>
+                            <button onClick={props.addNewAddress}> Add new address </button>
+                     </div>
+
+                    <WalletAddresses network={network} address={props.address} balances={balances} SetCurrentAddress = {SetCurrentAddress} />
+
                 </div>
 
                 : <div> Not Verified </div>
             }
+
         
+            <div className="wallet-receive-modal"> 
+
+                <Receive /> 
+
+            </div>
+
+            <div className="wallet-send-modal"> 
+
+                <Send /> 
+
+            </div>
+        
+           
+            <Transaction network={network} address={props.address} />
             
-            <Transaction network={props.network} currentAddressChosen={currentAddressChosen} currentPrivateKeyChosen= {currentPrivateKeyChosen} />
             
         </div>
     )
