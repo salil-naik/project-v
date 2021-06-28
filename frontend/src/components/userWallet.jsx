@@ -1,159 +1,155 @@
 
-import { ethers } from "ethers";
+// import { ethers } from "ethers";
 
-import {useEffect, useState, useRef} from 'react';
+// import {useEffect, useState, useRef} from 'react';
 
-import axios from 'axios';
+// import axios from 'axios';
 
-import { networkData } from '../scripts/network';
+// import { networkData } from '../scripts/network';
 
-import { ReceiveTokenModal } from './Modal/ReceiveToken/index';
-import { SendTokenModal } from './Modal/SendToken/index';
-import { SentimentDissatisfiedSharp } from "@material-ui/icons";
+// import { ReceiveTokenModal } from './Modal/ReceiveToken/index';
+// import { SendTokenModal } from './Modal/SendToken/index';
+// import { SentimentDissatisfiedSharp } from "@material-ui/icons";
 
-const WalletAddresses = (props) => {
+// const WalletAddresses = (props) => {
 
-    const [chosenBalances, SetChosenBalances] = useState(true)
+//     const [chosenBalances, SetChosenBalances] = useState(true)
     
+//     return(
+//         <div> 
+//             <div style={{display: "flex", justifyContent: "flex-end"}}>
 
-    
-    return(
-        <div> 
-            <div style={{display: "flex", justifyContent: "flex-end"}}>
+//                 <label htmlFor="current-address"> Choose Address : </label> 
 
-                <label htmlFor="current-address"> Choose Address : </label> 
+//                 <select name="current-address" id="current-address" onChange={(e) => props.SetCurrentAddress(e.target.value)}> 
+//                     {
+//                         props.address.map((element, index) => {
+//                             return(
+//                                 <option value={index} key={index}> {element.address} </option>
+//                             )
+//                         })
+//                     }
 
-                <select name="current-address" id="current-address" onChange={(e) => props.SetCurrentAddress(e.target.value)}> 
-                    {
-                        props.address.map((element, index) => {
-                            return(
-                                <option value={index} key={index}> {element.address} </option>
-                            )
-                        })
-                    }
+//                 </select>
+//             </div>
 
-                </select>
-            </div>
+//             <div style={{display : "flex", justifyContent : "space-around"}}> 
+//                 <button onClick={() => SetChosenBalances(true)}> Balances </button>
+//                 <button onClick={() => {
+//                     props.getTransactions();
+//                     SetChosenBalances(false)
+//                 }}> Transactions </button>
+//             </div>
 
-            <div style={{display : "flex", justifyContent : "space-around"}}> 
-                <button onClick={() => SetChosenBalances(true)}> Balances </button>
-                <button onClick={() => {
-                    props.getTransactions();
-                    SetChosenBalances(false)
-                }}> Transactions </button>
-            </div>
-
-            {
-                chosenBalances ? 
-                <table> 
-                <thead> 
+//             {
+//                 chosenBalances ? 
+//                 <table> 
+//                 <thead> 
         
-                    <tr>
-                    <th> Balances </th>
-                    </tr>
-                    </thead>
-                    <tbody> 
-                        {
-                            props.balances.map((element, index) => {
-                                return(
-                                    <tr key={index}>
-                                    <th> <img src={element.logo_url} width="20px" /></th>
-                                    <th> {element.contract_ticker_symbol} </th>
-                                    <th> {element.balance} </th>
-                                    <th> {element.USD_value} </th>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
-                : 
-                <div> 
-                    <div> Transactions of {props.transactions.address}</div>
+//                     <tr>
+//                     <th> Balances </th>
+//                     </tr>
+//                     </thead>
+//                     <tbody> 
+//                         {
+//                             props.balances.map((element, index) => {
+//                                 return(
+//                                     <tr key={index}>
+//                                     <th> <img src={element.logo_url} width="20px" /></th>
+//                                     <th> {element.contract_ticker_symbol} </th>
+//                                     <th> {element.balance} </th>
+//                                     <th> {element.USD_value} </th>
+//                                     </tr>
+//                                 )
+//                             })
+//                         }
+//                     </tbody>
+//                 </table>
+//                 : 
+//                 <div> 
 
-                    <div> 
-                        <div>
-                            <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/>
-                            <div> Fantom </div> 
-                            <div> 10 FTM </div>
-                            <div> $100 </div>
-                            <div> Received </div>
+//                     <div> 
+//                         <div>
+//                             {/* <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/>
+//                             <div> Fantom </div> 
+//                             <div> 10 FTM </div>
+//                             <div> $100 </div>
+//                             <div> Received </div> */}
 
-                        </div>
-                        {
-                            props.transactions.items.map((element) => {
-                                console.log(element);
-                            })
-                        }
-                    </div>
-                </div>
-            }
+//                         </div>
+  
+//                     </div>
+//                 </div>
+//             }
 
-        </div>
-    )
-}
+//         </div>
+//     )
+// }
 
-const Transaction = (props) => {
+// const Transaction = (props) => {
 
-    // console.log(props.network);
+//     // console.log(props.network);
 
-    // Network By default is Kovan
-    let networkChosen = props.network;
+//     // Network By default is Kovan
+//     let networkChosen = props.network;
     
 
-    const provider = new ethers.providers.JsonRpcProvider(networkChosen);
-    const signer = provider.getSigner()
+//     const provider = new ethers.providers.JsonRpcProvider(networkChosen);
+//     const signer = provider.getSigner()
 
 
-    const sendEth = async () => {
-        const walletPrivateKey = new ethers.Wallet(props.address[0].privateKey);
+//     const sendEth = async () => {
+//         const walletPrivateKey = new ethers.Wallet(props.address[0].privateKey);
 
-        // console.log(walletPrivateKey);
+//         // console.log(walletPrivateKey);
 
-        const wallet = walletPrivateKey.connect(provider)
+//         const wallet = walletPrivateKey.connect(provider)
 
-        // console.log(wallet);
+//         // console.log(wallet);
 
-        let sendAddressInput = document.getElementById('send-address-input').value;
-        let sendTokenInput = document.getElementById('send-token-input').value;
+//         let sendAddressInput = document.getElementById('send-address-input').value;
+//         let sendTokenInput = document.getElementById('send-token-input').value;
 
-        let tx = {
-            to: sendAddressInput,
-            value: ethers.utils.parseEther(sendTokenInput)
-          }
+//         let tx = {
+//             to: sendAddressInput,
+//             value: ethers.utils.parseEther(sendTokenInput)
+//           }
           
-          // Signing a transaction
-          await wallet.sendTransaction(tx)
-          .then(result => {
-              console.log(result);
-          })
-    }
+//           // Signing a transaction
+//           await wallet.sendTransaction(tx)
+//           .then(result => {
+//               console.log(result);
+//           })
+//     }
 
-    return(
-        <div>
-            {/* <input id="send-token-input" placeholder="1 ETH" required/>
-            <input id="send-address-input" placeholder="0xbbbaaD77908e7143B6b4D543abefd08568f63" required/>
-            <button onClick={sendEth}> Send </button> */}
-        </div>
-    )
-}
+//     return(
+//         <div>
+//             {/* <input id="send-token-input" placeholder="1 ETH" required/>
+//             <input id="send-address-input" placeholder="0xbbbaaD77908e7143B6b4D543abefd08568f63" required/>
+//             <button onClick={sendEth}> Send </button> */}
+//         </div>
+//     )
+// }
 
-function useInterval(callback, delay) {
-    const savedCallback = useRef();
+
+// function useInterval(callback, delay) {
+//     const savedCallback = useRef();
   
-    // Remember the latest callback.
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
+//     // Remember the latest callback.
+//     useEffect(() => {
+//       savedCallback.current = callback;
+//     }, [callback]);
   
-    // Set up the interval.
-    useEffect(() => {
-      let id = setInterval(() => {
-        savedCallback.current();
-      }, delay);
-      return () => clearInterval(id);
-    }, [delay]);
-  }
+//     // Set up the interval.
+//     useEffect(() => {
+//       let id = setInterval(() => {
+//         savedCallback.current();
+//       }, delay);
+//       return () => clearInterval(id);
+//     }, [delay]);
+//   }
+
+
 
 function UserWallet(props) {
 
@@ -235,7 +231,7 @@ function UserWallet(props) {
 
         axios.get(`https://project-v.salilnaik.repl.co/TokenBalances/address/${props.address[currentAddress].address}/chain/${chainID}/`)
             .then(result => {
-                // console.log(result.data.tokens);
+                console.log(result.data.tokens);
                 setBalances(result.data.tokens)
                 return true;
             })

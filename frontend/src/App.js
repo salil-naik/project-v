@@ -1,27 +1,30 @@
-import Wallet from './components/wallet';
-import Search from './components/Search/search'
-// import {network} from './scripts/network.js';
+import { useState } from 'react';
+import { network } from "./scripts/network.js";
 import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useHistory
-} from "react-router-dom";
-
-import {Home} from "./pages/home/index";
+// pages
+import { Home } from "./pages/Home/index";
+import { Wallet } from "./pages/Wallet/index";
+import { Navbar } from "./components/Navbar/index";
 
 function App() {
+
+  const [address, SetAddress] = useState();
+
   return (
-    <div className="App">
+    <Router>
+      <Navbar />
+      <Switch>
+        <Router path="/" exact>
+          <Home />
+        </Router>
 
-      {/* <div> */}
-
-      <Wallet/>
-      {/* <Home /> */}
-    </div>
+        <Route path="/wallet">
+          <Wallet/>
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
