@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 export const WalletAddresses = (props) => {
 
     const [chosenBalances, SetChosenBalances] = useState(true)
@@ -62,6 +64,7 @@ export const WalletAddresses = (props) => {
                             <div> 10 FTM </div>
                             <div> $100 </div>
                             <div> Received </div> */}
+                            {console.log(props.transactions)}
 
                         </div>
   
