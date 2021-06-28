@@ -13,10 +13,6 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
   const [amount, SetAmount] = useState(0);
   const [decimal, SetDecimal] = useState(null);
 
-
-
-
-
   const submitTransaction = () => {
     console.log(tokenAddress, receiverAddress, network, walletData);
 
