@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import { Search } from "../../components/Search";
+import { NFTCard } from "../../components/NFTCard";
 import style from "./explore.module.scss";
 
 export const Explore = ({ match }) => {
@@ -50,14 +51,16 @@ export const Explore = ({ match }) => {
 
           if (token.nft_data) {
             if (token.nft_data.length > 0) {
-              let tempObj = {};
-              tempObj[token.contract_name] = token.nft_data;
-              setSegregatedNFTs((prevState) => {
-                return { ...prevState, ...tempObj };
-              });
-              setNFTContracts((prevState) => {
-                return new Set([...prevState, token.contract_name]);
-              });
+              if (token.nft_data[0].external_data) {
+                let tempObj = {};
+                tempObj[token.contract_name] = token.nft_data;
+                setSegregatedNFTs((prevState) => {
+                  return { ...prevState, ...tempObj };
+                });
+                setNFTContracts((prevState) => {
+                  return new Set([...prevState, token.contract_name]);
+                });
+              }
             }
           }
         }
@@ -104,7 +107,7 @@ export const Explore = ({ match }) => {
         <div>
           <button
             onClick={() => {
-              console.log(SegregatedNFTs, JSON.stringify(SegregatedNFTs));
+              console.log(SegregatedNFTs);
               setSelectedContract("AllNFTs");
             }}
             className={`${
@@ -116,7 +119,10 @@ export const Explore = ({ match }) => {
           {Array.from(NFTContracts).map((contract) => (
             <button
               key={contract}
-              onClick={() => setSelectedContract(contract)}
+              onClick={() => {
+                console.log(SegregatedNFTs[contract]);
+                setSelectedContract(contract);
+              }}
               className={`${
                 selectedContract === contract ? style.selectedButton : ""
               }`}
@@ -128,6 +134,7 @@ export const Explore = ({ match }) => {
       ) : (
         ""
       )}
+
       {selected === "Tokens" ? (
         tokenBalances.length !== 0 ? (
           <div>
@@ -152,6 +159,7 @@ export const Explore = ({ match }) => {
       ) : (
         <div></div>
       )}
+      <br />
       {selected === "NFTs" && selectedContract === "AllNFTs" ? (
         SegregatedNFTs && NFTs.length !== 0 ? (
           <div>
@@ -160,13 +168,14 @@ export const Explore = ({ match }) => {
             {Object.keys(SegregatedNFTs).map((contract) =>
               SegregatedNFTs[contract].map((nft) =>
                 nft.external_data ? (
-                  <div key={nft.external_data.name}>
-                    <img
-                      src={nft.external_data.image}
-                      alt={nft.external_data.description}
-                      style={{ maxWidth: "500px" }}
+                  <div
+                    key={`${nft.external_data.image}${nft.external_data.name}`}
+                  >
+                    <NFTCard
+                      url={nft.external_data.image}
+                      description={nft.external_data.description}
+                      name={nft.external_data.name}
                     />
-                    <p>{nft.external_data.name}</p>
 
                     <hr />
                   </div>
@@ -200,17 +209,16 @@ export const Explore = ({ match }) => {
         NFTs.length !== 0 ? (
           <div>
             {SegregatedNFTs[selectedContract].map((nft) => (
-              <div key={nft.external_data.name}>
+              <div key={`${nft.external_data.image}${nft.external_data.name}`}>
                 {nft.external_data ? (
-                  <img
-                    src={nft.external_data.image}
-                    alt={nft.external_data.description}
-                    style={{ maxWidth: "500px" }}
+                  <NFTCard
+                    url={nft.external_data.image}
+                    description={nft.external_data.description}
+                    name={nft.external_data.name}
                   />
                 ) : (
-                  "no image"
+                  ""
                 )}
-                <p>{nft.external_data.name}</p>
 
                 <hr />
               </div>
@@ -222,4 +230,4 @@ export const Explore = ({ match }) => {
       }
     </div>
   );
-}
+};
