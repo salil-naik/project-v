@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import axios from 'axios';
 
 import UserWallet from './userWallet.jsx';
+import Explore from '../pages/Explore/Explore';
 
 import "../css/wallet.css"
 
@@ -220,6 +221,7 @@ function Wallet(props) {
         }
     }
 
+
   
     return(
 
@@ -259,6 +261,10 @@ function Wallet(props) {
 
             <Route path="/wallet"> 
             <UserWallet verified={verified} address={address} addNewAddress={addNewAddress}/>
+            </Route>
+
+            <Route path="/address/:address" component={Explore}>
+                
             </Route>
 
             </Switch>
