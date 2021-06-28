@@ -15,8 +15,8 @@ import {Home} from "./pages/home/index";
 function App() {
   return (
     <div className="App">
-      {/* <Wallet network = {network}/> */}
-      <Home />
+      <Wallet network = {network}/>
+      {/* <Home /> */}
     </div>
   );
 }
