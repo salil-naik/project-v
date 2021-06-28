@@ -15,12 +15,12 @@ import {Home} from "./pages/home/index";
 
 function App() {
   return (
-    // <div className="App">
+    <div className="App">
 
-      <div>
+      {/* <div> */}
 
-      <Wallet/>
-      {/* <Home /> */}
+      {/* <Wallet/> */}
+      <Home />
     </div>
   );
 }
