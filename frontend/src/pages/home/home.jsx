@@ -96,8 +96,8 @@ export const Home = () => {
 
   const checkMnemonic = (userMnemonic, userPw) => {
     setMnemonic(userMnemonic.trim());
-    const key = userPw;
-    const m = mnemonic;
+    const key = userPw.trim();
+    const m = mnemonic.trim();
     setupWallet();
 
     const encrypted = AES.encrypt(JSON.stringify({ m }), key).toString();
