@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { ethers } from "ethers";
 import AES from "crypto-js/aes";
+import {enc} from "crypto-js";
 
 // material ui
 import { Container, Grid } from "@material-ui/core";
@@ -10,7 +11,9 @@ import { Container, Grid } from "@material-ui/core";
 import { FancyButton } from "../../components/FancyButton/index";
 import { CreateWalletModal } from "../../components/Modal/CreateWalletModal/index";
 import { VerifyWalletModal } from "../../components/Modal/VerifyWalletModal/index";
+import { UnlockWallet } from "../../components/Modal/UnlockWallet/index";
 import { ImportWallet } from "./ImportWallet/index";
+import { Input } from "../../components/Input/index";
 
 // CSS
 import style from "./home.module.scss";
@@ -18,6 +21,7 @@ import style from "./home.module.scss";
 export const Home = (props) => {
   const [createWalletState, setCreateWalletState] = useState(false);
   const [verificationModalState, setVerificationModalState] = useState(false);
+  const [unlockWalletModalState, setUnlockWalletModalState] = useState(false);
   const [tooltip, setTooltip] = useState("Click to copy");
   // const [address, setAddress] = useState([]);
 
@@ -30,6 +34,7 @@ export const Home = (props) => {
     setCreateWalletState(false);
     setVerificationModalState(false);
     setImportWalletState(false);
+    setUnlockWalletModalState(false);
   };
 
   const openVerificationModal = () => {
@@ -41,6 +46,10 @@ export const Home = (props) => {
     setVerificationModalState(false);
     setCreateWalletState(true);
   };
+
+  const openUnlockWalletModal = () => {
+    setUnlockWalletModalState(true);
+  }
 
   // important functions
   // To Create Wallet
@@ -109,6 +118,38 @@ export const Home = (props) => {
     onClick: checkMnemonic,
   };
 
+  const unlockWallet = (pass) => {
+    let password = pass.trim();
+    let encrypted = localStorage.getItem('project_v_w');
+    const decrypted = AES.decrypt(encrypted, password);
+    console.log(decrypted);
+
+    try {
+        let decryptedText = decrypted.toString(enc.Utf8);
+        let finalDecryptedText = JSON.parse(decryptedText)
+        // var originalText = bytes.toString();
+        let mnemonic = finalDecryptedText.m;
+        // console.log(history);
+        props.setVerified(true);
+
+        props.setMnemonic(mnemonic)
+
+        const walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/0`);
+
+        props.setAddress(arr => [...arr, {
+            address : walletMnemonic.address,
+            privateKey : walletMnemonic.privateKey
+        }])
+
+    }
+
+    catch(err) {
+        console.log(err);
+    }
+
+    console.log(password);
+}
+
   if (props.verified) {
     return <Redirect to="/wallet" />;
   } else {
@@ -143,6 +184,21 @@ export const Home = (props) => {
                   onClick={importWallet}
                 />
               </Grid>
+              <Grid item sm={4}>
+                {
+                  localStorage.getItem('project_v_w') ?
+                  <FancyButton
+                  title="Have a wallet?"
+                  desc="Enter your password to unlock"
+                  color="red"
+                  icon="import"
+                  onClick={openUnlockWalletModal}
+                  />
+                :
+                <p> </p>
+                }
+
+              </Grid>
             </Grid>
           </div>
         </Container>
@@ -169,6 +225,12 @@ export const Home = (props) => {
 
         {/* Import Wallet Section */}
         <ImportWallet data={importWalletData} />
+
+        <UnlockWallet
+           open={unlockWalletModalState}
+           onClose={handleClose}
+           
+        />
       </>
     );
   }

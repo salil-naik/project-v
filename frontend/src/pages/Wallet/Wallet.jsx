@@ -45,7 +45,7 @@ export const Wallet = (props) => {
       const [sendTokenState, setSendTokenState] = useState(false);
       const [tokenData, setTokenData] = useState()
   
-      const [transactions, SetTransactions] = useState();
+      const [transactions, SetTransactions] = useState([]);
   
       const openReceiveToken = () => {
           setReceiveTokenState(true);
@@ -115,7 +115,7 @@ export const Wallet = (props) => {
       const getTransactions = () => {
           axios.get(`https://project-v.salilnaik.repl.co/Transactions/address/${props.address[currentAddress].address}/chain/${chainID}`)
           .then(result => {
-              // console.log(result.data);
+              console.log(result.data);
               SetTransactions(result.data)
               return true;
           })

@@ -7,11 +7,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import { ethers } from "ethers";
 
+import { abi } from './tokenAbi.js';
+
 export const SendTokenModal = ({ open, onClose, prevModal, data, network, walletData }) => {
   const [tokenAddress, SetTokenAddress] = useState("");
   const [receiverAddress, SetReceiverAddress] = useState("");
   const [amount, SetAmount] = useState(0);
   const [decimal, SetDecimal] = useState(null);
+  // const [src, SetSrc] = useState("");
+
 
   const submitTransaction = () => {
     console.log(tokenAddress, receiverAddress, network, walletData);
@@ -28,29 +32,73 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
         let gas_price = ethers.utils.hexlify(parseInt(price));
         console.log(`gas_price: ${ gas_price }`);
 
+        if(tokenAddress === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
+          console.log("eth");
+            const tx = {  
+              to : receiverAddress,
+              value : ethers.utils.parseEther(amount),
+              // nonce : wallet.getTransactionCount(walletData.address, 'latest'),
+              gasLimit : ethers.utils.hexlify('0x100000'),// 100000
+              gasPrice : gas_price
+            }
 
-     const tx = {  
-        to : receiverAddress,
-        value : (amount * Math.pow(10, decimal)),
-        // nonce : wallet.getTransactionCount(walletData.address, 'latest'),
-        // gasLimit : ethers.utils.hexlify('0x100000')// 100000
-        gasPrice : gas_price
-      }
-
-      try{
-        wallet.sendTransaction(tx).then((transaction) => 
-        {
-            console.dir(transaction);
-            alert('Send finished!');
-        });
-        } catch(error){
-            alert("failed to send!!");
+            try{
+              wallet.sendTransaction(tx).then((transaction) => 
+              {
+                  console.log(transaction);
+                  alert('Send finished!');
+              });
+              } catch(error){
+                  alert("failed to send!!", error);
+              }
         }
-      });
 
+        else if (tokenAddress === "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83") {
+          console.log("ftm");
+
+          const tx = {  
+            to : receiverAddress,
+            value : ethers.utils.parseEther(amount),
+            // nonce : wallet.getTransactionCount(walletData.address, 'latest'),
+            gasLimit : ethers.utils.hexlify('0x100000'),// 100000
+            gasPrice : gas_price
+          }
+
+          try{
+            wallet.sendTransaction(tx).then((transaction) => 
+            {
+                console.log(transaction);
+                alert('Send finished!');
+            });
+            } 
+            catch(error){
+                alert("failed to send!!", error);
+            }
+        }
+        else {
+
+          const contract = new ethers.Contract(tokenAddress, abi, wallet);
+
+          try{
+
+              contract.transfer(receiverAddress, ethers.utils.parseUnits(amount, decimal))
+              .then((result) => {
+                console.log(result);
+              })
+              .catch(err => console.log(err))
+
+            } 
+            
+            catch(error) {
+                alert("failed to send!!", error);
+            }
+
+        }
+
+
+      });
       
     }
-
 
   };
 
@@ -106,6 +154,8 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
           }}
           Required
         /> 
+
+        {/* <div className="etherscan-confirmed"> <a href={src}> Check on Etherscan</a> </div> */}
 
         <div className={modalStyle.btnSection}>
             {/* {data.contract_name} */}
