@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Tab, Tabs } from "@material-ui/core";
 import { TabPanel, TabContext } from "@material-ui/lab";
 import style from "./wallet.module.scss";
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 export const WalletAddresses = (props) => {
   const [chosenBalances, SetChosenBalances] = useState(true);
@@ -32,7 +32,7 @@ export const WalletAddresses = (props) => {
           </select>
         </div>
 
-        <div style={{display: 'flex', alignItems:"flex-end"}}>
+        <div style={{ display: "flex", alignItems: "flex-end" }}>
           <div className={style.dropdownContainer}>
             <label htmlFor="current-address" className={style.label}>
               Choose Address
@@ -52,7 +52,13 @@ export const WalletAddresses = (props) => {
               })}
             </select>
           </div>
-          <button onClick={props.addNewAddress} className={style.addAddress} title="add address"><AddCircleIcon /></button>
+          <button
+            onClick={props.addNewAddress}
+            className={style.addAddress}
+            title="add address"
+          >
+            <AddCircleIcon />
+          </button>
         </div>
       </div>
 
@@ -121,14 +127,22 @@ export const WalletAddresses = (props) => {
                 <div>
                   {props.transactions.map((token, index) => {
                     return (
-                      <div key={index}>
-                        <div> {token.ticker} </div>
-                        <div>
-                          {" "}
-                          {token.amount} {token.ticket}{" "}
+                      <div key={index} className={style.txRow}>
+                        <div style={{ display: "flex" }}>
+                          <div className={style.name}>{token.ticker}</div>
+                          <div className={style.tknAmnt}>
+                            {token.amount} {token.ticket}
+                          </div>
                         </div>
-                        <div> From : {token.from} </div>
-                        <div> To : {token.to} </div>
+                        <div style={{ display: "flex" }}>
+                          <div className={style.tknAdd}>
+                            <b>From</b> : {token.from}
+                          </div>{" "}
+                          <span> --- </span>
+                          <div className={style.tknAdd}>
+                            <b>To</b> : {token.to}
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
