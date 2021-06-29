@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,eAAe,CAAC;EACd,gBAAgB,EAAE,GAAG;CACtB",
+    "sources": [
+        "spiritswap.module.scss"
+    ],
+    "names": [],
+    "file": "spiritswap.module.css"
+}

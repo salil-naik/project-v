@@ -1,0 +1,129 @@
+.btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #1969ff;
+  cursor: pointer;
+  color: white;
+}
+
+.btn svg {
+  margin-right: 10px;
+}
+
+.btn:first-child {
+  margin-right: 20px;
+}
+
+.btn:hover {
+  background-color: #fff;
+  color: black;
+}
+
+.btnContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  padding-top: 50px;
+}
+
+.dashboard {
+  padding: 100px 0 70px;
+}
+
+.textSmall {
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.textBig {
+  color: white;
+  font-size: 50px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.balanceContainer {
+  background-color: #191f2a;
+  color: #fff;
+  padding: 5px 25px 25px;
+  border-radius: 15px;
+}
+
+.tokenDisplayTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tokenDisplayTable tbody,
+.tokenDisplayTable thead {
+  width: 100%;
+}
+
+.tokenDisplayTable td,
+.tokenDisplayTable th {
+  text-align: left;
+  width: 25%;
+}
+
+.tokenDisplayTable td:first-child,
+.tokenDisplayTable th:first-child {
+  padding-left: 15px;
+}
+
+.tokenDisplayTable td:last-child,
+.tokenDisplayTable th:last-child {
+  padding-right: 15px;
+}
+
+.tokenDisplayTable th {
+  font-size: 14px;
+  line-height: 50px;
+}
+
+.token {
+  height: 50px;
+  width: 100%;
+  border-bottom: 1px solid #ffffff0c;
+  padding: 0 15px;
+}
+
+.token:hover {
+  background-color: #111;
+}
+
+.tokenImg {
+  height: 26px;
+  width: 26px;
+  background-color: #f1f1f1;
+  border-radius: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: black;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.tokenImgimg {
+  height: inherit;
+  width: inherit;
+  border-radius: inherit;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+/*# sourceMappingURL=wallet.module.css.map */

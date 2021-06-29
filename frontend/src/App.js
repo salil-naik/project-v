@@ -59,9 +59,8 @@ function App() {
         </Route>
         <Route path="/address/:address" component={Explore} />
 
-        <Route path="/spiritswap">
-            <SpiritSwap />
-        </Route>
+        <Route path="/spiritswap" component={ SpiritSwap } />
+
       </Switch>
     </div>
   );

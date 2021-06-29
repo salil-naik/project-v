@@ -1,0 +1,59 @@
+.section {
+  border-radius: 15px;
+  padding: 40px 20px;
+  -webkit-box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.29);
+          box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.29);
+  color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #2a2b52;
+  cursor: pointer;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+}
+
+.section__title {
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.section__desc {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.section.violet {
+  background: linear-gradient(99.01deg, #7c5af5 10.95%, #e37bf4 93.26%);
+}
+
+.section.violet:hover {
+  background: #7c5af5;
+}
+
+.section.red {
+  background: linear-gradient(291.54deg, #eb6764 14.09%, #de505a 83.95%);
+}
+
+.section.red:hover {
+  background: #de505a;
+}
+
+.section.orange {
+  background: linear-gradient(291.54deg, #ffb37f 14.09%, #ff8e4d 83.95%);
+}
+
+.section.orange:hover {
+  background: #ff8e4d;
+}
+
+.section.violet, .section.orange, .section.red {
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+}
+/*# sourceMappingURL=style.module.css.map */

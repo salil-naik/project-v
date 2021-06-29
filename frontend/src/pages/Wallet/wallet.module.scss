@@ -64,27 +64,27 @@
     width: 100%;
   }
 
-//   thead{
-//       border-bottom: 1px solid white;
-//   }
+  //   thead{
+  //       border-bottom: 1px solid white;
+  //   }
 
   td,
   th {
     text-align: left;
-    width:25%;
+    width: 25%;
 
-    &:first-child{
-        padding-left: 15px;
+    &:first-child {
+      padding-left: 15px;
     }
 
-    &:last-child{
-        padding-right: 15px;
+    &:last-child {
+      padding-right: 15px;
     }
   }
 
-  th{
-      font-size: 14px;  
-      line-height: 50px;
+  th {
+    font-size: 14px;
+    line-height: 50px;
   }
 }
 .token {
@@ -93,8 +93,8 @@
   border-bottom: 1px solid #ffffff0c;
   padding: 0 15px;
 
-  &:hover{
-      background-color: #111;
+  &:hover {
+    background-color: #111;
   }
 
   &Img {
