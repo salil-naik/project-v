@@ -11,7 +11,7 @@ export const WalletAddresses = (props) => {
   };
   return (
     <>
-      {/* <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <label htmlFor="current-address"> Choose Address : </label>
         <select
           name="current-address"
@@ -27,7 +27,7 @@ export const WalletAddresses = (props) => {
             );
           })}
         </select>
-      </div> */}
+      </div>
 
       <div className={style.balanceContainer}>
         <TabContext value={value}>
@@ -40,7 +40,6 @@ export const WalletAddresses = (props) => {
                 height: "5px",
               },
             }}
-            className={style.tabLabel}
           >
             <Tab label="Balances in wallet" value={1} />
             <Tab
@@ -49,23 +48,40 @@ export const WalletAddresses = (props) => {
               onClick={() => {
                 props.getTransactions();
               }}
-              className={style.tabLabel}
             />
           </Tabs>
 
           <TabPanel value={1} style={{ padding: "0" }}>
-            <table>
+            <table className={style.tokenDisplayTable}>
+              <thead>
+                <tr>
+                  <th>Token</th>
+                  <th>Symbol</th>
+                  <th>Balance</th>
+                  <th>USD Value</th>
+                </tr>
+              </thead>
               <tbody>
                 {props.balances.map((element, index) => {
                   return (
-                    <tr key={index}>
-                      <th>
-                        {" "}
-                        <img src={element.logo_url} width="20px" />
-                      </th>
-                      <th> {element.contract_ticker_symbol} </th>
-                      <th> {element.balance} </th>
-                      <th> {element.USD_value} </th>
+                    <tr key={index} className={style.token}>
+                      <td>
+                        {element.logo_url ? (
+                          <img
+                            src={element.logo_url}
+                            width="20px"
+                            className={style.tokenImg}
+                          />
+                        ) : (
+                          <div className={style.tokenImg}>T</div>
+                        )}
+                      </td>
+                      <td>{element.contract_ticker_symbol}</td>
+                      <td>{element.balance}</td>
+                      <td>
+                        <span>$</span>
+                        {element.USD_value}
+                      </td>
                     </tr>
                   );
                 })}
@@ -74,27 +90,24 @@ export const WalletAddresses = (props) => {
           </TabPanel>
           <TabPanel value={2} style={{ padding: "0" }}>
             <div>
-            <div> 
+              <div>
+                <div>
+                  {props.transactions.map((token, index) => {
+                    return (
+                      <div key={index}>
+                        {/* <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/> */}
+                        <div> {token.ticker} </div>
                         <div>
-                            
-                            {
-                                props.transactions.map((token, index) => {
-                                    return(
-                                        <div key={index}> 
-                                            {/* <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/> */}
-                                            <div> {token.ticker} </div> 
-                                            <div> {token.amount} {token.ticket} </div>
-                                            <div> From : {token.from} </div>
-                                            <div> To : {token.to} </div>
-                                        </div>
-                                    )
-                                })
-                             
-                            }
-
+                          {" "}
+                          {token.amount} {token.ticket}{" "}
                         </div>
-  
-                    </div>
+                        <div> From : {token.from} </div>
+                        <div> To : {token.to} </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </TabPanel>
         </TabContext>
