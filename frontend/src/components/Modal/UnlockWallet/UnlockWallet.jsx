@@ -4,6 +4,11 @@ import { Modal } from "@material-ui/core";
 import { Input } from "../../Input/index";
 
 export const UnlockWallet = ({ open, onClose, prevModal, unlockWallet }) => {
+  const [pass, SetPass] = useState(null);
+
+  const unlockWalletPassword = () => {
+    unlockWallet(pass);
+  }
 
   const onChange = ({ name, value, id }) => {};
   return (
@@ -13,40 +18,19 @@ export const UnlockWallet = ({ open, onClose, prevModal, unlockWallet }) => {
 
 
         <Input
-                  Label="Already have a wallet? Enter password"
-                  Id="enter-password"
-                  Type="password"
-                  Name="enter-password"
-                  OnChange={(e) => {
-                    unlockWallet(e.target.value);
-                  }}
-                  Required
-                />
-{/* 
-        <Input
-          Label="Enter Mnemonic"
-          Id="verify-mnemonic"
-          Type="text"
-          Name="Verify Mnemonic"
-          Value={verifyMnemonic}
-          Placeholder="Seed phrase"
-          OnChange={(e) => {
-            setVerifyMnemonic(e.value);
-          }}
+          Label="Already have a wallet? Enter password"
+          Id="enter-password"
+          Type="password"
+          Name="enter-password"
+          OnChange = {(e) => { SetPass(e.target.value) }}
           Required
         />
 
-        <Input
-          Label="Add wallet password"
-          Id="add-wallet-password"
-          Type="password"
-          Name="Wallet Password"
-          Value={walletPw}
-          OnChange={(e) => {
-            setWalletPw(e.value);
-          }}
-          Required
-        /> */}
+        <div className={`${modalStyle.btnSection} ${modalStyle.flexEnd}`}>
+            <button type="submit" className={modalStyle.btn} onClick = {unlockWalletPassword}>
+              Unlock
+            </button>
+          </div>
 
       </div>
     </Modal>

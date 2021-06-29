@@ -8,7 +8,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { ethers } from "ethers";
 
 import { abi } from "./tokenAbi.js";
-import { style } from "@material-ui/system";
 
 export const SendTokenModal = ({
   open,
@@ -17,12 +16,14 @@ export const SendTokenModal = ({
   data,
   network,
   walletData,
+  explorer,
 }) => {
   const [tokenAddress, SetTokenAddress] = useState("");
   const [receiverAddress, SetReceiverAddress] = useState("");
   const [amount, SetAmount] = useState(0);
   const [decimal, SetDecimal] = useState(null);
-  // const [src, SetSrc] = useState("");
+  const [msg, SetMsg] = useState("");
+  const [visible, SetVisible] = useState("none");
 
   const submitTransaction = () => {
     console.log(tokenAddress, receiverAddress, network, walletData);
@@ -53,6 +54,8 @@ export const SendTokenModal = ({
             wallet.sendTransaction(tx).then((transaction) => {
               console.log(transaction);
               alert("Send finished!");
+              SetMsg(`${explorer}/tx/${transaction.hash}`);
+              SetVisible("flex");
             });
           } catch (error) {
             alert("failed to send!!", error);
@@ -78,6 +81,24 @@ export const SendTokenModal = ({
           } catch (error) {
             alert("failed to send!!", error);
           }
+        } else if (
+          tokenAddress === "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83"
+        ) {
+          console.log("ftm");
+
+          try {
+            wallet
+              .sendTransaction(tx)
+              .then((transaction) => {
+                console.log(transaction);
+                alert("Send finished!");
+                SetMsg(`${explorer}tx/${transaction.hash}`);
+                SetVisible("flex");
+              })
+              .catch((err) => alert(err));
+          } catch (error) {
+            alert("failed to send!!", error);
+          }
         } else {
           const contract = new ethers.Contract(tokenAddress, abi, wallet);
 
@@ -90,7 +111,7 @@ export const SendTokenModal = ({
               .then((result) => {
                 console.log(result);
               })
-              .catch((err) => console.log(err));
+              .catch((err) => alert(err));
           } catch (error) {
             alert("failed to send!!", error);
           }
@@ -152,7 +173,13 @@ export const SendTokenModal = ({
           Required
         />
 
-        {/* <div className="etherscan-confirmed"> <a href={src}> Check on Etherscan</a> </div> */}
+        <div style={{ display: `${visible}` }}>
+          {" "}
+          <a href={msg} target="_blank">
+            {" "}
+            Check on Etherscan{" "}
+          </a>{" "}
+        </div>
 
         <div className={modalStyle.btnSection}>
           {/* {data.contract_name} */}

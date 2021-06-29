@@ -12,6 +12,24 @@ export const WalletAddresses = (props) => {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <label htmlFor="network">Choose a network:</label>
+        <select
+          defaultValue="kovan"
+          name="network"
+          id="network-connected"
+          onChange={(e) => {
+            props.changeNetwork(e.target.value);
+          }}
+        >
+          <option value="kovan">Kovan</option>
+          <option value="ethereum">Etheruem Mainnet</option>
+          <option value="fantom-testnet">Fantom Testnet</option>
+          <option value="fantom-mainnet">Fantom Mainnet</option>
+        </select>
+        <button onClick={props.addNewAddress}> Add new address </button>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <label htmlFor="current-address"> Choose Address : </label>
         <select
           name="current-address"
@@ -95,7 +113,6 @@ export const WalletAddresses = (props) => {
                   {props.transactions.map((token, index) => {
                     return (
                       <div key={index}>
-                        {/* <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/> */}
                         <div> {token.ticker} </div>
                         <div>
                           {" "}

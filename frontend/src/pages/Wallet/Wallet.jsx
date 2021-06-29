@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { Redirect } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { networkData } from "../../scripts/network.js";
@@ -39,12 +40,16 @@ export const Wallet = (props) => {
 
   const [network, SetNetwork] = useState(networkData.kovan.rpc);
   const [chainID, SetChainID] = useState(networkData.kovan.chainID);
+  const [explorer, SetExplorer] = useState(networkData.kovan.explorer);
+
   const [balances, setBalances] = useState([]);
   const [currentAddress, SetCurrentAddress] = useState(0);
 
   const [receiveTokenState, setReceiveTokenState] = useState(false);
   const [sendTokenState, setSendTokenState] = useState(false);
   const [tokenData, setTokenData] = useState();
+
+  const [totalAmount, SetTotalAmount] = useState(0);
 
   const [transactions, SetTransactions] = useState([]);
 
@@ -64,26 +69,31 @@ export const Wallet = (props) => {
   };
 
   const changeNetwork = (input) => {
+    // console.log(input);
     console.log("Network is changing");
     switch (input) {
       case "kovan":
         SetNetwork(networkData.kovan.rpc);
         SetChainID(networkData.kovan.chainID);
+        SetExplorer(networkData.kovan.explorer);
         break;
 
       case "ethereum":
         SetNetwork(networkData.ethereumMainnet.rpc);
         SetChainID(networkData.ethereumMainnet.chainID);
+        SetExplorer(networkData.ethereumMainnet.explorer);
         break;
 
       case "fantom-testnet":
         SetNetwork(networkData.fantomTestnet.rpc);
         SetChainID(networkData.fantomTestnet.chainID);
+        SetExplorer(networkData.fantomTestnet.explorer);
         break;
 
       case "fantom-mainnet":
         SetNetwork(networkData.fantomMainnet.rpc);
         SetChainID(networkData.fantomMainnet.chainID);
+        SetExplorer(networkData.fantomMainnet.explorer);
         break;
     }
   };
@@ -103,6 +113,7 @@ export const Wallet = (props) => {
       .then((result) => {
         console.log(result.data.tokens);
         setBalances(result.data.tokens);
+        calculateTotal(result.data.tokens);
         return true;
       })
       .catch((err) => console.log(err));
@@ -121,6 +132,15 @@ export const Wallet = (props) => {
       .catch((err) => console.log(err));
   };
 
+  const calculateTotal = (data) => {
+    let count = 0;
+    data.map((element) => {
+      count = count + element.USD_value;
+    });
+
+    SetTotalAmount(count.toFixed(2));
+  };
+
   return (
     <>
       <Container>
@@ -129,7 +149,7 @@ export const Wallet = (props) => {
             <Grid container justify="center" className={style.dashboard}>
               <Grid item sm={5}>
                 <p className={style.textSmall}>Total Amount</p>
-                <p className={style.textBig}>$0.0</p>
+                <p className={style.textBig}>$ {totalAmount} </p>
               </Grid>
               <Grid item sm={5}>
                 <div className={style["btnContainer"]}>
@@ -146,27 +166,6 @@ export const Wallet = (props) => {
             </Grid>
             <Grid container justify="center">
               <Grid item sm={10}>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <label htmlFor="network">Choose a network:</label>
-                  <select
-                    defaultValue="kovan"
-                    name="network"
-                    id="network-connected"
-                    onChange={(e) => {
-                      changeNetwork(e.target.value);
-                    }}
-                  >
-                    <option value="kovan">Kovan</option>
-                    <option value="ethereum">Etheruem Mainnet</option>
-                    <option value="fantom-testnet">Fantom Testnet</option>
-                    <option value="fantom-mainnet">Fantom Mainnet</option>
-                  </select>
-                  <button onClick={props.addNewAddress}>
-                    {" "}
-                    Add new address{" "}
-                  </button>
-                </div>
-
                 <WalletAddresses
                   transactions={transactions}
                   network={network}
@@ -177,31 +176,34 @@ export const Wallet = (props) => {
                   setSendTokenState={setSendTokenState}
                   setTokenData={setTokenData}
                   getTransactions={getTransactions}
+                  changeNetwork={changeNetwork}
+                  addNewAddress={props.addNewAddress}
                 />
               </Grid>
             </Grid>
+
+            {/* modals */}
+            <ReceiveTokenModal
+              open={receiveTokenState}
+              onClose={handleClose}
+              data={balances}
+              walletAddress={props.address[currentAddress].address}
+            />
+
+            {/* Verify Modal */}
+            <SendTokenModal
+              open={sendTokenState}
+              onClose={handleClose}
+              data={balances}
+              network={network}
+              walletData={props.address[currentAddress]}
+              explorer={explorer}
+            />
           </>
         ) : (
-          <div> Not Verified </div>
+          <Redirect to="/" />
         )}
       </Container>
-
-      {/* modals */}
-      <ReceiveTokenModal
-        open={receiveTokenState}
-        onClose={handleClose}
-        data={balances}
-        walletAddress={props.address[currentAddress].address}
-      />
-
-      {/* Verify Modal */}
-      <SendTokenModal
-        open={sendTokenState}
-        onClose={handleClose}
-        data={balances}
-        network={network}
-        walletData={props.address[currentAddress]}
-      />
     </>
   );
 };
