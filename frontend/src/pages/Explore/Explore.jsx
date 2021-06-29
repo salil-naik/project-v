@@ -45,7 +45,7 @@ export const Explore = ({ match }) => {
         console.log(result.data.items);
         setNFTs(result.data.items);
         let total = 0;
-        console.log("Should appear only once");
+        
         for (let token of result.data.items) {
           total += parseFloat(token.balance);
 
@@ -118,7 +118,7 @@ export const Explore = ({ match }) => {
           </button>
           {Array.from(NFTContracts).map((contract) => (
             <button
-              key={contract}
+              key={`${address}${contract}`}
               onClick={() => {
                 console.log(SegregatedNFTs[contract]);
                 setSelectedContract(contract);
@@ -141,7 +141,7 @@ export const Explore = ({ match }) => {
             <h2>Token balances</h2>
             <p>Total balance: ${totalBalance}</p>
             {tokenBalances.map((token) => (
-              <div key={token.contract_ticker_symbol}>
+              <div key={`${token.contract_name}${address}`}>
                 <h3>
                   {token.contract_name} ({token.contract_ticker_symbol})
                 </h3>
@@ -169,7 +169,7 @@ export const Explore = ({ match }) => {
               SegregatedNFTs[contract].map((nft) =>
                 nft.external_data ? (
                   <div
-                    key={`${nft.external_data.image}${nft.external_data.name}`}
+                    key={`${address}${nft.external_data.image}${nft.external_data.name}`}
                   >
                     <NFTCard
                       url={nft.external_data.image}
@@ -209,7 +209,7 @@ export const Explore = ({ match }) => {
         NFTs.length !== 0 ? (
           <div>
             {SegregatedNFTs[selectedContract].map((nft) => (
-              <div key={`${nft.external_data.image}${nft.external_data.name}`}>
+              <div key={`${address}${nft.external_data.image}${nft.external_data.name}`}>
                 {nft.external_data ? (
                   <NFTCard
                     url={nft.external_data.image}
