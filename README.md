@@ -1,6 +1,9 @@
-# project-v
+# Spectre Wallet 👻
 
-**To run this on your local device :**
+<a href="https://www.youtube.com/watch?v=swjsl5Y6D84"> Demo Video </a>
+
+**To run on your local device :**
+
 Install dependencies
 
 ```
@@ -12,5 +15,3 @@ yarn start
 ```
 
 For any troubleshooting, reach out to Shrey#0749 on Discord.
-
-
