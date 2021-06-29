@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Tab, Tabs } from "@material-ui/core";
 import { TabPanel, TabContext } from "@material-ui/lab";
 import style from "./wallet.module.scss";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 export const WalletAddresses = (props) => {
   const [chosenBalances, SetChosenBalances] = useState(true);
@@ -11,40 +12,54 @@ export const WalletAddresses = (props) => {
   };
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <label htmlFor="network">Choose a network:</label>
-        <select
-          defaultValue="kovan"
-          name="network"
-          id="network-connected"
-          onChange={(e) => {
-            props.changeNetwork(e.target.value);
-          }}
-        >
-          <option value="kovan">Kovan</option>
-          <option value="ethereum">Etheruem Mainnet</option>
-          <option value="fantom-testnet">Fantom Testnet</option>
-          <option value="fantom-mainnet">Fantom Mainnet</option>
-        </select>
-        <button onClick={props.addNewAddress}> Add new address </button>
-      </div>
+      <div className={style["dropdown-section"]}>
+        <div className={style.dropdownContainer}>
+          <label htmlFor="network" className={style.label}>
+            Choose a network
+          </label>
+          <select
+            defaultValue="kovan"
+            name="network"
+            id="network-connected"
+            onChange={(e) => {
+              props.changeNetwork(e.target.value);
+            }}
+          >
+            <option value="kovan">Kovan</option>
+            <option value="ethereum">Etheruem Mainnet</option>
+            <option value="fantom-testnet">Fantom Testnet</option>
+            <option value="fantom-mainnet">Fantom Mainnet</option>
+          </select>
+        </div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <label htmlFor="current-address"> Choose Address : </label>
-        <select
-          name="current-address"
-          id="current-address"
-          onChange={(e) => props.SetCurrentAddress(e.target.value)}
-        >
-          {props.address.map((element, index) => {
-            return (
-              <option value={index} key={index}>
-                {" "}
-                {element.address}{" "}
-              </option>
-            );
-          })}
-        </select>
+        <div style={{ display: "flex", alignItems: "flex-end" }}>
+          <div className={style.dropdownContainer}>
+            <label htmlFor="current-address" className={style.label}>
+              Choose Address
+            </label>
+            <select
+              name="current-address"
+              id="current-address"
+              onChange={(e) => props.SetCurrentAddress(e.target.value)}
+            >
+              {props.address.map((element, index) => {
+                return (
+                  <option value={index} key={index}>
+                    {" "}
+                    {element.address}{" "}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <button
+            onClick={props.addNewAddress}
+            className={style.addAddress}
+            title="add address"
+          >
+            <AddCircleIcon />
+          </button>
+        </div>
       </div>
 
       <div className={style.balanceContainer}>
@@ -112,14 +127,22 @@ export const WalletAddresses = (props) => {
                 <div>
                   {props.transactions.map((token, index) => {
                     return (
-                      <div key={index}>
-                        <div> {token.ticker} </div>
-                        <div>
-                          {" "}
-                          {token.amount} {token.ticket}{" "}
+                      <div key={index} className={style.txRow}>
+                        <div style={{ display: "flex" }}>
+                          <div className={style.name}>{token.ticker}</div>
+                          <div className={style.tknAmnt}>
+                            {token.amount} {token.ticket}
+                          </div>
                         </div>
-                        <div> From : {token.from} </div>
-                        <div> To : {token.to} </div>
+                        <div style={{ display: "flex" }}>
+                          <div className={style.tknAdd}>
+                            <b>From</b> : {token.from}
+                          </div>{" "}
+                          <span> --- </span>
+                          <div className={style.tknAdd}>
+                            <b>To</b> : {token.to}
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
