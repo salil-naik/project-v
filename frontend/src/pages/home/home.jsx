@@ -114,7 +114,7 @@ export const Home = (props) => {
   } else {
     return (
       <>
-        <Container>
+        <Container className={style.homeContainer}>
           <Grid container>
             <Grid item sm={8}>
               <h1>Fantom Wallet</h1>

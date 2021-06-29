@@ -1,5 +1,6 @@
 import style from "./navbar.module.scss";
 import { Container, Grid } from "@material-ui/core";
+import {Link} from "react-router-dom";
 
 import Logo from '../../Spectre.png';
 
@@ -12,7 +13,7 @@ export const Navbar = () => {
       <Container>
         <Grid container>
           <Grid item sm={6}>
-            <div><img src={Logo} width="300px"/></div>
+            <Link to="/"><img src={Logo} className={style.logo}/></Link>
           </Grid>
           <Grid item sm={6}>
             <div className={style.searchContainer}>

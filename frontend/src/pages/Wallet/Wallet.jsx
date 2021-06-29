@@ -11,6 +11,7 @@ import { WalletAddresses } from "./WalletAddresses";
 // material ui
 import { Grid, Container } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 import style from "./wallet.module.scss";
 
@@ -138,7 +139,7 @@ export const Wallet = (props) => {
                     Send
                   </div>
                   <div onClick={openReceiveToken} className={style.btn}>
-                    <SendIcon />
+                    <AccountBalanceWalletIcon />
                     Receive
                   </div>
                 </div>
