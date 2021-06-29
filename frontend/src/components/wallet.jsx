@@ -189,37 +189,7 @@ function Wallet(props) {
     //     }
     // }
 
-    const unlockWallet = () => {
-        let password = document.getElementById('wallet-password').value.trim();
-        let encrypted = localStorage.getItem('project_v_w');
-        const decrypted = AES.decrypt(encrypted, password);
-        console.log(decrypted);
 
-        try {
-            let decryptedText = decrypted.toString(enc.Utf8);
-            let finalDecryptedText = JSON.parse(decryptedText)
-            // var originalText = bytes.toString();
-            let mnemonic = finalDecryptedText.m;
-            // console.log(history);
-            setVerified(true);
-
-            setMnemonic(mnemonic)
-
-            const walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/0`);
-
-            setAddress(arr => [...arr, {
-                address : walletMnemonic.address,
-                privateKey : walletMnemonic.privateKey
-            }])
-
-            history.push('/wallet');
-
-        }
-
-        catch(err) {
-            console.log(err);
-        }
-    }
 
 
   

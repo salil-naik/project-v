@@ -11,7 +11,7 @@ import { WalletAddresses } from "./WalletAddresses";
 // material ui
 import { Grid, Container } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 
 import style from "./wallet.module.scss";
 
@@ -46,7 +46,7 @@ export const Wallet = (props) => {
   const [sendTokenState, setSendTokenState] = useState(false);
   const [tokenData, setTokenData] = useState();
 
-  const [transactions, SetTransactions] = useState();
+  const [transactions, SetTransactions] = useState([]);
 
   const openReceiveToken = () => {
     setReceiveTokenState(true);
@@ -64,7 +64,6 @@ export const Wallet = (props) => {
   };
 
   const changeNetwork = (input) => {
-    // console.log(input);
     console.log("Network is changing");
     switch (input) {
       case "kovan":
@@ -115,7 +114,7 @@ export const Wallet = (props) => {
         `https://project-v.salilnaik.repl.co/Transactions/address/${props.address[currentAddress].address}/chain/${chainID}`
       )
       .then((result) => {
-        // console.log(result.data);
+        console.log(result.data);
         SetTransactions(result.data);
         return true;
       })

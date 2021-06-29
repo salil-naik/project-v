@@ -74,16 +74,27 @@ export const WalletAddresses = (props) => {
           </TabPanel>
           <TabPanel value={2} style={{ padding: "0" }}>
             <div>
-              <div>
-                <div>
-                  {/* <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/>
-                            <div> Fantom </div> 
-                            <div> 10 FTM </div>
-                            <div> $100 </div>
-                            <div> Received </div> */}
-                  {console.log(props.transactions)}
-                </div>
-              </div>
+            <div> 
+                        <div>
+                            
+                            {
+                                props.transactions.map((token, index) => {
+                                    return(
+                                        <div key={index}> 
+                                            {/* <img src="https://logos.covalenthq.com/tokens/0x4e15361fd6b4bb609fa63c81a2be19d873717870.png" width="25px"/> */}
+                                            <div> {token.ticker} </div> 
+                                            <div> {token.amount} {token.ticket} </div>
+                                            <div> From : {token.from} </div>
+                                            <div> To : {token.to} </div>
+                                        </div>
+                                    )
+                                })
+                             
+                            }
+
+                        </div>
+  
+                    </div>
             </div>
           </TabPanel>
         </TabContext>
