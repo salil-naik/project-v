@@ -9,6 +9,7 @@ import { Home } from "./pages/Home/index";
 import { Wallet } from "./pages/Wallet/index";
 import { Navbar } from "./components/Navbar/index";
 import { Explore } from "./pages/Explore/index";
+import { SpiritSwap } from './pages/SpiritSwap/index';
 
 function App() {
   const [address, setAddress] = useState([]);
@@ -57,6 +58,10 @@ function App() {
           />
         </Route>
         <Route path="/address/:address" component={Explore} />
+
+        <Route path="/spiritswap">
+            <SpiritSwap />
+        </Route>
       </Switch>
     </div>
   );
