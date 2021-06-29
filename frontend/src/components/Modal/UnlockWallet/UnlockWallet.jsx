@@ -3,7 +3,7 @@ import modalStyle from "../modal.module.scss";
 import { Modal } from "@material-ui/core";
 import { Input } from "../../Input/index";
 
-export const UnlockWallet = ({ open, onClose, prevModal, data, walletAddress }) => {
+export const UnlockWallet = ({ open, onClose, prevModal, unlockWallet }) => {
 
   const onChange = ({ name, value, id }) => {};
   return (
@@ -18,7 +18,7 @@ export const UnlockWallet = ({ open, onClose, prevModal, data, walletAddress }) 
                   Type="password"
                   Name="enter-password"
                   OnChange={(e) => {
-                    // unlockWallet(e.target.value);
+                    unlockWallet(e.target.value);
                   }}
                   Required
                 />

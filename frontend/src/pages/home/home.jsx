@@ -229,7 +229,7 @@ export const Home = (props) => {
         <UnlockWallet
            open={unlockWalletModalState}
            onClose={handleClose}
-           
+           unlockWallet = {unlockWallet}
         />
       </>
     );

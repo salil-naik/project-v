@@ -1,25 +1,28 @@
 .App {
-    display: flex;
-    flex-direction: column;
-    height : 300px;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  justify-content: space-between;
+  align-items: center;
 }
 
-body{
-    background: linear-gradient(99.01deg, #241642 10.95%, #191B1F 93.26%);
+body {
+  /* background: linear-gradient(99.01deg, #241642 10.95%, #191B1F 93.26%); */
+  background-color: #0d121c;
+  background-image: url(./images/bg-art-4.png);
+  background-size: cover;
 }
 
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
 }
 
-.flex{
-    display: flex;
-    height: 100%;
+.flex {
+  display: flex;
+  height: 100%;
 }
 
-.f-center{
-    align-items: center;
-    justify-content: center;
+.f-center {
+  align-items: center;
+  justify-content: center;
 }

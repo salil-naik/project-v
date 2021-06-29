@@ -1,33 +1,35 @@
 import { ethers } from "ethers";
+import { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import { networkData } from "../../scripts/network.js";
 
-import {useEffect, useState, useRef} from 'react';
+// components
+import { ReceiveTokenModal } from "../../components/Modal/ReceiveToken/index";
+import { SendTokenModal } from "../../components/Modal/SendToken/index";
+import { WalletAddresses } from "./WalletAddresses";
 
-import axios from 'axios';
+// material ui
+import { Grid, Container } from "@material-ui/core";
+import SendIcon from "@material-ui/icons/Send";
 
-import { networkData } from  '../../scripts/network.js';
-
-import { ReceiveTokenModal } from '../../components/Modal/ReceiveToken/index';
-import { SendTokenModal } from '../../components/Modal/SendToken/index';
-import { SentimentDissatisfiedSharp } from "@material-ui/icons";
-
-import { WalletAddresses } from './WalletAddresses';
+import style from "./wallet.module.scss";
 
 function useInterval(callback, delay) {
-    const savedCallback = useRef();
-  
-    // Remember the latest callback.
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
-  
-    // Set up the interval.
-    useEffect(() => {
-      let id = setInterval(() => {
-        savedCallback.current();
-      }, delay);
-      return () => clearInterval(id);
-    }, [delay]);
-  }
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    let id = setInterval(() => {
+      savedCallback.current();
+    }, delay);
+    return () => clearInterval(id);
+  }, [delay]);
+}
 
 export const Wallet = (props) => {
 
@@ -122,61 +124,88 @@ export const Wallet = (props) => {
           .catch(err => console.log(err));
       }
 
-
-      return(
-        <div style={{color : "white"}}>
-
-            {
-                props.verified ? 
-                <div>
-                    <div onClick={openSendToken}> Send </div>
-                    <div onClick={openReceiveToken}> Receive </div>
-
-                    <div style={{display: "flex", justifyContent : "flex-end"}}>
-                            <label htmlFor="network">Choose a network:</label> 
-                            <select defaultValue="kovan" name="network" id="network-connected" onChange={(e) => {changeNetwork(e.target.value)}}>
-                            <option value="kovan">Kovan</option>
-                            <option value="ethereum">Etheruem Mainnet</option>
-                            <option value="fantom-testnet">Fantom Testnet</option>
-                            <option value="fantom-mainnet">Fantom Mainnet</option>
-                            </select>
-                            <button onClick={props.addNewAddress}> Add new address </button>
-                     </div>
-              
-                    <WalletAddresses
-                    transactions={transactions}
-                    network={network}
-                    address={props.address}
-                    balances={balances}
-                    SetCurrentAddress ={SetCurrentAddress}
-                    setReceiveTokenState={setReceiveTokenState}
-                    setSendTokenState={setSendTokenState}
-                    setTokenData = {setTokenData}
-                    getTransactions={getTransactions}
-                    />
-
-                </div>
-
-                : <div> Not Verified </div>
-            }
-
+      return (
+        <>
+          <Container>
+            {props.verified ? (
+              <>
+                <Grid container justify="center" className={style.dashboard}>
+                  <Grid item sm={5}>
+                    <p className={style.textSmall}>Total Amount</p>
+                    <p className={style.textBig}>$0.0</p>
+                  </Grid>
+                  <Grid item sm={5}>
+                    <div className={style["btnContainer"]}>
+                      <div onClick={openSendToken} className={style.btn}>
+                        <SendIcon />
+                        Send
+                      </div>
+                      <div onClick={openReceiveToken} className={style.btn}>
+                        <SendIcon />
+                        Receive
+                      </div>
+                    </div>
+                  </Grid>
+                </Grid>
+                <Grid container justify="center">
+                  <Grid item sm={10}>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <label htmlFor="network">Choose a network:</label>
+                      <select
+                        defaultValue="kovan"
+                        name="network"
+                        id="network-connected"
+                        onChange={(e) => {
+                          changeNetwork(e.target.value);
+                        }}
+                      >
+                        <option value="kovan">Kovan</option>
+                        <option value="ethereum">Etheruem Mainnet</option>
+                        <option value="fantom-testnet">Fantom Testnet</option>
+                        <option value="fantom-mainnet">Fantom Mainnet</option>
+                      </select>
+                      <button onClick={props.addNewAddress}>
+                        {" "}
+                        Add new address{" "}
+                      </button>
+                    </div>
     
-            
-            <ReceiveTokenModal
-                    open={receiveTokenState}
-                    onClose={handleClose}
-                    data={balances}
-                    walletAddress = {props.address[currentAddress].address}
-                />
-
-                {/* Verify Modal */}
-                <SendTokenModal
-                    open={sendTokenState}
-                    onClose={handleClose}
-                    data={balances}
-                    network = {network}
-                    walletData = {props.address[currentAddress]}
-                />
-        </div>
-    )
-}
+                    <WalletAddresses
+                      transactions={transactions}
+                      network={network}
+                      address={props.address}
+                      balances={balances}
+                      SetCurrentAddress={SetCurrentAddress}
+                      setReceiveTokenState={setReceiveTokenState}
+                      setSendTokenState={setSendTokenState}
+                      setTokenData={setTokenData}
+                      getTransactions={getTransactions}
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            ) : (
+              <div> Not Verified </div>
+            )}
+          </Container>
+    
+          {/* modals */}
+          <ReceiveTokenModal
+            open={receiveTokenState}
+            onClose={handleClose}
+            data={balances}
+            walletAddress={props.address[currentAddress].address}
+          />
+    
+          {/* Verify Modal */}
+          <SendTokenModal
+            open={sendTokenState}
+            onClose={handleClose}
+            data={balances}
+            network={network}
+            walletData={props.address[currentAddress]}
+          />
+        </>
+      );
+    
+};

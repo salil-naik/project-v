@@ -1,63 +1,78 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { Container, Grid, Tab, Tabs } from "@material-ui/core";
+import { TabPanel, TabContext } from "@material-ui/lab";
+import style from "./wallet.module.scss";
 
 export const WalletAddresses = (props) => {
+  const [chosenBalances, SetChosenBalances] = useState(true);
+  const [value, setValue] = useState(1);
+  const handleTabs = (event, newValue) => {
+    setValue(newValue);
+  };
+  return (
+    <>
+      {/* <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <label htmlFor="current-address"> Choose Address : </label>
+        <select
+          name="current-address"
+          id="current-address"
+          onChange={(e) => props.SetCurrentAddress(e.target.value)}
+        >
+          {props.address.map((element, index) => {
+            return (
+              <option value={index} key={index}>
+                {" "}
+                {element.address}{" "}
+              </option>
+            );
+          })}
+        </select>
+      </div> */}
 
-    const [chosenBalances, SetChosenBalances] = useState(true)
-    
-    return(
-        <div> 
-            <div style={{display: "flex", justifyContent: "flex-end"}}>
+      <div className={style.balanceContainer}>
+        <TabContext value={value}>
+          <Tabs
+            value={value}
+            onChange={handleTabs}
+            indicatorColor="primary"
+            TabIndicatorProps={{
+              style: {
+                height: "5px",
+              },
+            }}
+          >
+            <Tab label="Balances in wallet" value={1} />
+            <Tab
+              label="Transactions"
+              value={2}
+              onClick={() => {
+                props.getTransactions();
+              }}
+            />
+          </Tabs>
 
-                <label htmlFor="current-address"> Choose Address : </label> 
-
-                <select name="current-address" id="current-address" onChange={(e) => props.SetCurrentAddress(e.target.value)}> 
-                    {
-                        props.address.map((element, index) => {
-                            return(
-                                <option value={index} key={index}> {element.address} </option>
-                            )
-                        })
-                    }
-
-                </select>
-            </div>
-
-            <div style={{display : "flex", justifyContent : "space-around"}}> 
-                <button onClick={() => SetChosenBalances(true)}> Balances </button>
-                <button onClick={() => {
-                    props.getTransactions();
-                    SetChosenBalances(false)
-                }}> Transactions </button>
-            </div>
-
-            {
-                chosenBalances ? 
-                <table> 
-                <thead> 
-        
-                    <tr>
-                    <th> Balances </th>
+          <TabPanel value={1} style={{ padding: "0" }}>
+            <table>
+              <tbody>
+                {props.balances.map((element, index) => {
+                  return (
+                    <tr key={index}>
+                      <th>
+                        {" "}
+                        <img src={element.logo_url} width="20px" />
+                      </th>
+                      <th> {element.contract_ticker_symbol} </th>
+                      <th> {element.balance} </th>
+                      <th> {element.USD_value} </th>
                     </tr>
-                    </thead>
-                    <tbody> 
-                        {
-                            props.balances.map((element, index) => {
-                                return(
-                                    <tr key={index}>
-                                    <th> <img src={element.logo_url} width="20px" /></th>
-                                    <th> {element.contract_ticker_symbol} </th>
-                                    <th> {element.balance} </th>
-                                    <th> {element.USD_value} </th>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
-                : 
-                <div> 
-
-                    <div> 
+                  );
+                })}
+              </tbody>
+            </table>
+          </TabPanel>
+          <TabPanel value={2} style={{ padding: "0" }}>
+            <div>
+            <div> 
                         <div>
                             
                             {
@@ -78,9 +93,10 @@ export const WalletAddresses = (props) => {
                         </div>
   
                     </div>
-                </div>
-            }
-
-        </div>
-    )
-}
+            </div>
+          </TabPanel>
+        </TabContext>
+      </div>
+    </>
+  );
+};
