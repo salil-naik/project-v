@@ -3,59 +3,40 @@ import modalStyle from "../modal.module.scss";
 import { Modal } from "@material-ui/core";
 import { Input } from "../../Input/index";
 
-export const ReceiveTokenModal = ({ open, onClose, prevModal, data, walletAddress }) => {
-  const [str , SetStr] = useState();
-  const [message, SetMessage] = useState("");
+export const ReceiveTokenModal = ({
+  open,
+  onClose,
+  prevModal,
+  data,
+  walletAddress,
+}) => {
+  const [str, SetStr] = useState();
+  const [tooltip, setTooltip] = useState("Click to copy");
 
   useEffect(() => {
-    SetStr(`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${walletAddress}&choe=UTF-8`);
-  }, [walletAddress])
+    SetStr(
+      `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${walletAddress}&choe=UTF-8`
+    );
+  }, [walletAddress]);
 
   const onChange = ({ name, value, id }) => {};
   return (
     <Modal open={open} onClose={onClose} className={modalStyle.overlay}>
       <div className={modalStyle.card}>
-        <h3 className={modalStyle.title}>Receive </h3>
+        <h3 className={modalStyle.title}>Receive</h3>
 
-        <img src={str} />
+        <img src={str} className={modalStyle.qr}/>
 
         <div
           className={modalStyle.seedphraseContainer}
           onClick={() => {
             navigator.clipboard.writeText(walletAddress);
-            SetMessage("Copied");
+            setTooltip("Copied");
           }}
         >
-          {walletAddress}
+          <p className={modalStyle.phrase} style={{fontSize: '16px'}}>{walletAddress}</p>
+          <span className={modalStyle.tooltip}>{tooltip}</span>
         </div>
-          
-        <p> {message} </p>
-{/* 
-        <Input
-          Label="Enter Mnemonic"
-          Id="verify-mnemonic"
-          Type="text"
-          Name="Verify Mnemonic"
-          Value={verifyMnemonic}
-          Placeholder="Seed phrase"
-          OnChange={(e) => {
-            setVerifyMnemonic(e.value);
-          }}
-          Required
-        />
-
-        <Input
-          Label="Add wallet password"
-          Id="add-wallet-password"
-          Type="password"
-          Name="Wallet Password"
-          Value={walletPw}
-          OnChange={(e) => {
-            setWalletPw(e.value);
-          }}
-          Required
-        /> */}
-
       </div>
     </Modal>
   );

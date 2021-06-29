@@ -34,13 +34,20 @@ export const SpiritSwap = () => {
       {
         spiritGeneralData.map((token, index) => {
           return (
-
-
             <tr key={ index }>
-                  
-                  </tr>
+              <th> {token.contract_name} </th>
+              <th> {token.contract_ticker_symbol} </th>
+              {/* <th> {total_liquidity} </th>
+              <th> {total_liquidity_quote} </th> */}
+              {/* <th> {quote_rate} </th>
+              <th> {quote_rate} </th>
+              <th> {quote_rate} </th> */}
 
 
+
+
+
+            </tr>
             )
         })
           }
