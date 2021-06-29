@@ -1,0 +1,55 @@
+.btn {
+  display: flex;
+  padding: 10px 20px;
+  border-radius: 5px;
+  // background-color: rgba(38, 102, 251, 0.247);
+  background-color: #1969ff;
+  cursor: pointer;
+  color: white;
+
+  svg {
+    margin-right: 10px;
+  }
+
+  &:first-child {
+    margin-right: 20px;
+  }
+
+  &:hover {
+    background-color: #fff;
+    color: black;
+  }
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 50px;
+}
+
+.dashboard {
+  padding: 100px 0 70px;
+}
+
+.textSmall {
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.textBig {
+  color: white;
+  font-size: 50px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.balanceContainer {
+  //   background-color: #181920;
+  //   background-color: #2a2e3d;
+  background-color: #191f2a;
+  color: #fff;
+  padding: 0 25px 25px;
+  border-radius: 15px;
+}
