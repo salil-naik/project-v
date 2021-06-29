@@ -11,6 +11,27 @@ export const WalletAddresses = (props) => {
   };
   return (
     <>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <label htmlFor="network">Choose a network:</label>
+            <select
+              defaultValue="kovan"
+              name="network"
+              id="network-connected"
+              onChange={(e) => {
+              props.changeNetwork(e.target.value);
+              }}
+             >
+              <option value="kovan">Kovan</option>
+              <option value="ethereum">Etheruem Mainnet</option>
+              <option value="fantom-testnet">Fantom Testnet</option>
+              <option value="fantom-mainnet">Fantom Mainnet</option>
+            </select>
+            <button onClick={props.addNewAddress}>
+             {" "}
+            Add new address{" "}
+            </button>
+      </div>
+      
       {/* <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <label htmlFor="current-address"> Choose Address : </label>
         <select

@@ -9,12 +9,14 @@ import { ethers } from "ethers";
 
 import { abi } from './tokenAbi.js';
 
-export const SendTokenModal = ({ open, onClose, prevModal, data, network, walletData }) => {
+export const SendTokenModal = ({ open, onClose, prevModal, data, network, walletData, explorer }) => {
   const [tokenAddress, SetTokenAddress] = useState("");
   const [receiverAddress, SetReceiverAddress] = useState("");
   const [amount, SetAmount] = useState(0);
   const [decimal, SetDecimal] = useState(null);
-  // const [src, SetSrc] = useState("");
+  const [msg, SetMsg] = useState("");
+  const [visible, SetVisible] = useState("none");
+
 
 
   const submitTransaction = () => {
@@ -47,6 +49,8 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
               {
                   console.log(transaction);
                   alert('Send finished!');
+                  SetMsg(`${explorer}/tx/${transaction.hash}`);
+                  SetVisible("flex")
               });
               } catch(error){
                   alert("failed to send!!", error);
@@ -69,7 +73,10 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
             {
                 console.log(transaction);
                 alert('Send finished!');
-            });
+                SetMsg(`${explorer}tx/${transaction.hash}`);
+                SetVisible("flex")
+            })
+            .catch(err => alert(err))
             } 
             catch(error){
                 alert("failed to send!!", error);
@@ -85,7 +92,7 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
               .then((result) => {
                 console.log(result);
               })
-              .catch(err => console.log(err))
+              .catch(err => alert(err))
 
             } 
             
@@ -112,9 +119,6 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
     <Modal open={open} onClose={onClose} className={modalStyle.overlay}>
       <div className={modalStyle.card}>
         <h3 className={modalStyle.title}></h3>
-        {/* {console.log("data",data )} */}
-        {/* {console.log("network", network )} */}
-
 
         <label htmlFor="crypto-to-send"> Choose Crypto </label>
         <Select
@@ -155,7 +159,7 @@ export const SendTokenModal = ({ open, onClose, prevModal, data, network, wallet
           Required
         /> 
 
-        {/* <div className="etherscan-confirmed"> <a href={src}> Check on Etherscan</a> </div> */}
+        <div style={{ display : `${visible}` }}> <a href={msg} target="_blank"> Check on Etherscan </a> </div>
 
         <div className={modalStyle.btnSection}>
             {/* {data.contract_name} */}
