@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Grid, Tab, Tabs } from "@material-ui/core";
+import { Tab, Tabs } from "@material-ui/core";
 import { TabPanel, TabContext } from "@material-ui/lab";
 import style from "./wallet.module.scss";
 
@@ -40,6 +40,7 @@ export const WalletAddresses = (props) => {
                 height: "5px",
               },
             }}
+            className={style.tabLabel}
           >
             <Tab label="Balances in wallet" value={1} />
             <Tab
@@ -48,6 +49,7 @@ export const WalletAddresses = (props) => {
               onClick={() => {
                 props.getTransactions();
               }}
+              className={style.tabLabel}
             />
           </Tabs>
 
