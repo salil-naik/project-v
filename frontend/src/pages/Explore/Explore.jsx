@@ -47,6 +47,7 @@ export const Explore = ({ match }) => {
             total += token.USD_value;
           }
           setTotalBalance(total);
+          setErrorTokens(false);
         }).catch((err) => {
           console.log(err);
           setErrorTokens(true);
@@ -84,6 +85,7 @@ export const Explore = ({ match }) => {
           }
 
           setTotalNFTs(total);
+          setErrorNFTs(false);
         }).catch((err) => {
         console.log(err);
         setErrorNFTs(true);
@@ -151,7 +153,7 @@ export const Explore = ({ match }) => {
                 <p>Total NFTs {totalNFTs}</p>
               </div>
 
-              {NFTs.length !== 0 && (
+              {NFTs.length !== 0 && errorNFTs === false && (
                 <Grid item sm={12}>
                   <div className={style.btnContainer}>
                     <div className={style["rail"]}>
@@ -190,7 +192,7 @@ export const Explore = ({ match }) => {
               )}
 
               {selectedContract === "AllNFTs" &&
-                (SegregatedNFTs && NFTs.length !== 0 ? (
+                (SegregatedNFTs && NFTs.length !== 0 && errorNFTs === false ? (
                   <Grid container spacing={3}>
                     {Object.keys(SegregatedNFTs).map((contract) =>
                       SegregatedNFTs[contract].map(
