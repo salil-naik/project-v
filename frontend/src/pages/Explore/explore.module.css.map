@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,eAAe,CAAC;EACZ,gBAAgB,EAAE,GAAG;CACxB",
-    "sources": [
-        "explore.module.scss"
-    ],
-    "names": [],
-    "file": "explore.module.css"
-}
