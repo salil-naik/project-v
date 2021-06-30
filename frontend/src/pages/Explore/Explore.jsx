@@ -16,6 +16,9 @@ export const Explore = ({ match }) => {
   const [network, setNetwork] = useState(1);
   const [selectedContract, setSelectedContract] = useState("AllNFTs");
 
+  const [errorNFTs, setErrorNFTs] = useState(false);
+  const [errorTokens, setErrorTokens] = useState(false);
+
   const [tokenBalances, setTokenBalances] = useState([]);
   const [totalBalance, setTotalBalance] = useState(0);
 
@@ -24,25 +27,31 @@ export const Explore = ({ match }) => {
   const [NFTContracts, setNFTContracts] = useState(new Set());
   const [totalNFTs, setTotalNFTs] = useState(0);
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     const provider = new ethers.providers.JsonRpcProvider(
       "https://eth-mainnet.alchemyapi.io/v2/Hoq2ORelL-pxtuQQE903j61xB_WAQdtj"
     );
 
-    await provider.resolveName(address).then((resolved) => {
-      console.log(resolved)
+    provider.resolveName(address).then((resolved) => {
+      console.log(resolved);
+      setTokenBalances([]);
       axios
         .get(
           `https://project-v.salilnaik.repl.co/TokenBalances/address/${resolved}/chain/${network}/`
         )
         .then((result) => {
+          
           setTokenBalances(result.data.tokens);
           let total = 0;
           for (let token of result.data.tokens) {
             total += token.USD_value;
           }
           setTotalBalance(total);
-        });
+        }).catch((err) => {
+          console.log(err);
+          setErrorTokens(true);
+  
+        });;
 
       axios
         .get(
@@ -52,10 +61,12 @@ export const Explore = ({ match }) => {
           console.log(result.data.items);
           setNFTs(result.data.items);
           let total = 0;
-
+          setSegregatedNFTs({});
+          setNFTContracts([]);
           for (let token of result.data.items) {
             total += parseFloat(token.balance);
 
+ 
             if (token.nft_data) {
               if (token.nft_data.length > 0) {
                 if (token.nft_data[0].external_data) {
@@ -73,7 +84,10 @@ export const Explore = ({ match }) => {
           }
 
           setTotalNFTs(total);
-        });
+        }).catch((err) => {
+        console.log(err);
+        setErrorNFTs(true);
+      });
     });
   }, [address, network]);
 
