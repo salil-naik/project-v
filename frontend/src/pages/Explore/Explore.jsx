@@ -112,6 +112,7 @@ export const Explore = ({ match }) => {
   return (
     <div>
       <Container>
+        { (errorNFTs === false && errorTokens === false) ?
         <Grid container spacing={3}>
           <Grid item sm={12}>
             <div className={style.topSection}>
@@ -245,7 +246,8 @@ export const Explore = ({ match }) => {
               )}
             </div>
           </Grid>
-        </Grid>
+        </Grid> : 
+        <h2 style={{color:"white"}}>Something went wrong 😣. <br/> Please check if you've entered the correct address. <br/> If that isn't the issue, then it's probably us. Please try again later.</h2>}
       </Container>
     </div>
   );
