@@ -21,8 +21,11 @@ export const Explore = ({ match }) => {
   const [errorNFTs, setErrorNFTs] = useState(false);
   const [errorTokens, setErrorTokens] = useState(false);
 
+  const [fetchedNFTs, setFetchedNFTs] = useState(false);
+  const [fetchedTokens, setFetchedTokens] = useState(false);
+
   const [tokenBalances, setTokenBalances] = useState([]);
-  const [totalBalance, setTotalBalance] = useState(null);
+  const [totalBalance, setTotalBalance] = useState(0);
 
   const [NFTs, setNFTs] = useState([]);
   const [SegregatedNFTs, setSegregatedNFTs] = useState({});
@@ -30,11 +33,13 @@ export const Explore = ({ match }) => {
   const [totalNFTs, setTotalNFTs] = useState(0);
 
   React.useEffect(() => {
+    setFetchedTokens(false);
+    setFetchedNFTs(false);
     setDataLoaded(false);
     setTokenBalances([]);
     setSegregatedNFTs({});
     setNFTContracts([]);
-    setTotalBalance(null);
+    setTotalBalance(0);
     const provider = new ethers.providers.JsonRpcProvider(
       "https://eth-mainnet.alchemyapi.io/v2/Hoq2ORelL-pxtuQQE903j61xB_WAQdtj"
     );
@@ -48,7 +53,7 @@ export const Explore = ({ match }) => {
           `https://project-v.salilnaik.repl.co/TokenBalances/address/${resolved}/chain/${network}/`
         )
         .then((result) => {
-
+          
           setTokenBalances(result.data.tokens);
           let total = 0;
           for (let token of result.data.tokens) {
@@ -57,6 +62,7 @@ export const Explore = ({ match }) => {
           setTotalBalance(total);
           setErrorTokens(false);
           setDataLoaded(true);
+          setFetchedTokens(true);
         }).catch((err) => {
           console.log(err);
           setErrorTokens(true);
@@ -68,6 +74,7 @@ export const Explore = ({ match }) => {
           `https://project-v.salilnaik.repl.co/NFTs/address/${resolved}/chain/${network}/`
         )
         .then((result) => {
+          
           console.log(result.data.items);
           setNFTs(result.data.items);
           let total = 0;
@@ -95,6 +102,7 @@ export const Explore = ({ match }) => {
           setTotalNFTs(total);
           setErrorNFTs(false);
           setDataLoaded(true);
+          setFetchedNFTs(true);
         }).catch((err) => {
           console.log(err);
           setErrorNFTs(true);
@@ -137,9 +145,10 @@ export const Explore = ({ match }) => {
                 style={{ padding: "0 15px" }}
               >
                 <h2>Tokens & Balances</h2>
-                <p>Total balance: {(totalBalance?`$${totalBalance}`:'Loading...')}</p>
+                <p>Total balance: {(fetchedTokens?`$${totalBalance}`:'Loading...')}</p>
               </div>
-              {tokenBalances.length !== 0 && dataLoaded ? (
+              {fetchedTokens && dataLoaded ? (
+                tokenBalances.length !== 0 ? (
                 <div>
                   {tokenBalances.map((token) => (
                     <TokenDisplay
@@ -150,8 +159,8 @@ export const Explore = ({ match }) => {
                   ))}
                 </div>
               ) : (
-                <div className={style.loading}>Loading tokens...</div>
-              )}
+                <div className={style.loading}>No Tokens Found</div>
+              )):<div className={style.loading}>Loading tokens...</div>}
             </div>
           </Grid>
 
@@ -160,7 +169,7 @@ export const Explore = ({ match }) => {
             <div className={style.nftContainer}>
               <div className={style.sectionDetails}>
                 <h2>NFTs</h2>
-                <p>Total NFTs: {totalNFTs}</p>
+                <p>Total NFTs: {fetchedNFTs?totalNFTs:'Loading'}</p>
               </div>
 
               {NFTs.length !== 0 && errorNFTs === false && (
@@ -200,7 +209,8 @@ export const Explore = ({ match }) => {
               )}
 
               {selectedContract === "AllNFTs" &&
-                (SegregatedNFTs && NFTs.length !== 0 && errorNFTs === false && dataLoaded ? (
+                (SegregatedNFTs && errorNFTs === false && dataLoaded ? (
+                  NFTs.length !== 0 ? (
                   <Grid container spacing={3}>
                     {Object.keys(SegregatedNFTs).map((contract) =>
                       SegregatedNFTs[contract].map(
@@ -222,8 +232,8 @@ export const Explore = ({ match }) => {
                     )}
                   </Grid>
                 ) : (
-                  <div className={style.loading}>Loading NFTs...</div>
-                ))}
+                  <div className={style.loading}>No NFTs Found</div> 
+                )):<div className={style.loading}>Loading NFTs...</div>)}
 
               {selectedContract !== "AllNFTs" && NFTs.length !== 0 && (
                 <Grid container spacing={3}>
@@ -247,7 +257,7 @@ export const Explore = ({ match }) => {
             </div>
           </Grid>
         </Grid> : 
-        <h2 style={{color:"white"}}>Something went wrong 😣. <br/> Please check if you've entered the correct address. <br/> If that isn't the issue, then it's probably us. Please try again later.</h2>}
+        <h2 style={{color:"white"}}>Something went wrong 😣. <br/> Please check if you've entered the correct address and try again. <br/> If that isn't the issue, then it's probably us. Please try again later.</h2>}
       </Container>
     </div>
   );
