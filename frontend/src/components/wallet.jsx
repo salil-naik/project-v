@@ -3,8 +3,11 @@ import { useState, useEffect } from 'react';
 import { ethers } from "ethers";
 import axios from 'axios';
 
+import Search from './search'
 import UserWallet from './userWallet.jsx';
 import Explore from '../pages/Explore/Explore';
+
+import Profile from './Profile';
 
 import "../css/wallet.css"
 
@@ -18,7 +21,9 @@ import {
     Route,
     Link,
     useHistory
-  } from "react-router-dom";
+} from "react-router-dom";
+
+
 
 // Need to add edge case for Mneumonic string
 
@@ -44,7 +49,7 @@ const VerifyWallet = (props) => {
         }
     }
 
-    return(
+    return (
         <div>
             <label htmlFor="verify-mnemonic"> Verify Mnemonic </label>
             <input id="verify-mnemonic" type="text" />
@@ -129,8 +134,8 @@ function Wallet(props) {
         const walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/0`);
 
         setAddress(arr => [...arr, {
-            address : walletMnemonic.address,
-            privateKey : walletMnemonic.privateKey
+            address: walletMnemonic.address,
+            privateKey: walletMnemonic.privateKey
         }])
 
     }
@@ -144,8 +149,8 @@ function Wallet(props) {
         const walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/${number}`);
 
         setAddress(arr => [...arr, {
-            address : walletMnemonic.address,
-            privateKey : walletMnemonic.privateKey
+            address: walletMnemonic.address,
+            privateKey: walletMnemonic.privateKey
         }])
     }
 
@@ -240,6 +245,6 @@ function Wallet(props) {
             </Switch>
 
     )
-} 
+}
 
 export default Wallet;

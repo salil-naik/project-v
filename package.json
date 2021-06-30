@@ -1,0 +1,28 @@
+{
+  "name": "project-v",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salil-naik/project-v.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  },
+  "bugs": {
+    "url": "https://github.com/salil-naik/project-v/issues"
+  },
+  "homepage": "https://github.com/salil-naik/project-v#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
