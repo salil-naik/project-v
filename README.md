@@ -4,13 +4,17 @@
 
 **To run on your local device :**
 
-Install dependencies
+- Enter `frontend` directory
+```
+cd frontend
+```
+- Install dependencies
 
 ```
 yarn install
 ```
 
-Start the development server
+- Start the development server
 
 ```
 yarn start
