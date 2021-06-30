@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-import { Search } from "../../components/Search";
 import { NFTCard } from "../../components/NFTCard";
 import style from "./explore.module.scss";
 
