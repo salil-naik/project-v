@@ -2,6 +2,8 @@
 
 <a href="https://www.youtube.com/watch?v=swjsl5Y6D84"> Demo Video </a>
 
+[Deployed Wallet: https://spectre.recurshawn.repl.co/](https://spectre.recurshawn.repl.co/) 
+
 **To run on your local device :**
 
 - Enter `frontend` directory
