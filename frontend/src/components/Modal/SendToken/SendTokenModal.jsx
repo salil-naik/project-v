@@ -38,10 +38,11 @@ export const SendTokenModal = ({
 
       wallet.getGasPrice().then((price) => {
         let gas_price = ethers.utils.hexlify(parseInt(price));
-        console.log(`gas_price: ${ethers.utils.formatEther(gas_price.toString())}`);
+        console.log(
+          `gas_price: ${ethers.utils.formatEther(gas_price.toString())}`
+        );
 
         if (tokenAddress === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
-
           let tx = {
             to: receiverAddress,
             value: ethers.utils.parseEther(amount),
