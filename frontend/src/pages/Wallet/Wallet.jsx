@@ -125,6 +125,9 @@ export const Wallet = (props) => {
         `https://project-v.salilnaik.repl.co/Transactions/address/${props.address[currentAddress].address}/chain/${chainID}`
       )
       .then((result) => {
+            console.log(chainID);
+
+    console.log(props.address[currentAddress].address);
         console.log(result.data);
         SetTransactions(result.data);
         return true;
@@ -178,6 +181,7 @@ export const Wallet = (props) => {
                   getTransactions={getTransactions}
                   changeNetwork={changeNetwork}
                   addNewAddress={props.addNewAddress}
+                  explorer={ explorer }
                 />
               </Grid>
             </Grid>

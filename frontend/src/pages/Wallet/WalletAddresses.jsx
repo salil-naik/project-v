@@ -129,9 +129,9 @@ export const WalletAddresses = (props) => {
                     return (
                       <div key={index} className={style.txRow}>
                         <div style={{ display: "flex" }}>
-                          <div className={style.name}>{token.ticker}</div>
+                          {/* <div className={style.name}>{token.ticker}</div> */}
                           <div className={style.tknAmnt}>
-                            {token.amount} {token.ticket}
+                            {token.amount} {token.ticker}
                           </div>
                         </div>
                         <div style={{ display: "flex" }}>
@@ -142,6 +142,11 @@ export const WalletAddresses = (props) => {
                           <div className={style.tknAdd}>
                             <b>To</b> : {token.to}
                           </div>
+                        </div>
+                         <div style={{ display: "flex" }}>
+                          <div className={style.tknAdd}>
+                            <a href={`${props.explorer}tx/${token.tx_hash}`} target="_blank"> Explorer </a>
+                          </div>{" "}
                         </div>
                       </div>
                     );
