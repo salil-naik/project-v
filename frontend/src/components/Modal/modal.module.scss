@@ -12,7 +12,7 @@
   background-color: #2a2e3d;
   // background-color: #191F2A;
   border-radius: 20px;
-  padding: 30px;
+  padding: 30px 30px 110px 30px;
   width: 700px;
   min-height: 400px;
   position: relative;
@@ -87,37 +87,47 @@
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  border:0;
-  outline:0;
+  border: 0;
+  outline: 0;
 
   &:hover {
     background-color: #0b4de6;
   }
 }
 
-.text{
+.text {
   color: white;
   font-size: 16px;
   font-weight: bold;
 }
-.select{
+.select {
   width: 200px;
-  color:white;
+  color: white;
   margin-left: 20px;
   background-color: #3a3a4f;
   height: 40px;
   border-radius: 4px;
 }
 
-.inputContainer{
-  margin-bottom:30px;
+.inputContainer {
+  margin-bottom: 30px;
 }
 
-.qr{
-  width:200px;
+.qr {
+  width: 200px;
   height: 200px;
-  border-radius:  5px;
-  margin:auto;
-  display:block;
-  margin-bottom:30px;
+  border-radius: 5px;
+  margin: auto;
+  display: block;
+  margin-bottom: 30px;
+}
+
+.link {
+  color: #2666fb !important;
+
+  &:active,
+  &:hover,
+  &:visited {
+    color: inherit;
+  }
 }

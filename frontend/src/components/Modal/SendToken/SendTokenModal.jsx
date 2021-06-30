@@ -161,14 +161,13 @@ export const SendTokenModal = ({
 
         <div style={{ display: `${visible}` }}>
           {" "}
-          <a href={msg} target="_blank">
+          <a href={msg} target="_blank" className={modalStyle.link}>
             {" "}
             Check on Etherscan{" "}
           </a>{" "}
         </div>
 
         <div className={modalStyle.btnSection}>
-          {/* {data.contract_name} */}
           <div className={modalStyle.btn} onClick={submitTransaction}>
             {" "}
             Send{" "}
