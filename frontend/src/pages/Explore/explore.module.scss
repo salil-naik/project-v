@@ -1,3 +1,138 @@
 .selectedButton {
-    background-color: red;
+  background-color: white !important;
+  color:black !important;
+}
+
+.tokenContainer,
+.nftContainer {
+  color: white;
+
+  .sectionDetails {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    & * {
+      font-size: 18px;
+      margin: 0;
+      font-weight: bold;
+    }
+  }
+}
+
+.tokenContainer {
+  background-color: #191f2a;
+  padding: 30px 20px;
+  border-radius: 15px;
+}
+
+.token {
+  padding: 10px 15px;
+  margin-top: 5px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    background-color: #111;
+  }
+
+  .left {
+    display: flex;
+  }
+}
+
+.tokenLogo {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  object-fit: cover;
+  margin-right: 10px;
+  background-color: #fff;
+}
+
+.tokenName {
+  font-size: 16px;
+  line-height: 30px;
+  margin: 0;
+}
+
+.tokenBalance {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 14px;
+
+  div:first-child {
+    margin-bottom: 2px;
+  }
+
+  div:nth-child(2) {
+    color: #9b9b9b;
+  }
+}
+
+.loading {
+  padding: 30px 15px;
+  color: white;
+  font-weight: 600;
+}
+
+.topSection {
+  margin-top: 50px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+
+.inputContainer {
+  display: flex;
+  select {
+    outline: 0;
+    height: 44px;
+    width: 100%;
+    border-radius: 4px;
+    border: 2px solid #3a3a4f;
+    // border: 2px solid #60616c;
+    line-height: 44px;
+    background-color: #3a3a4f;
+    color: white;
+    padding: 0 12px;
+  }
+
+  label {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+    white-space: nowrap;
+    line-height: 40px;
+    margin-right: 10px;
+  }
+}
+
+.btnContainer{
+    margin-bottom:30px;
+    overflow-x:scroll;
+
+    .rail{
+        width:2000px;
+    }
+    .btn{
+        padding: 8px 16px;
+        outline:none;
+        border:0;
+        border-radius:5px;
+        color:white; 
+        font-weight: 600;
+        background-color:#3a3a4faf;
+        margin:5px;
+
+        &:hover{
+            background-color:white;
+            color:black;
+        }
+    }
 }

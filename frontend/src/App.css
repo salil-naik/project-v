@@ -10,7 +10,7 @@ body {
   /* background: linear-gradient(99.01deg, #241642 10.95%, #191B1F 93.26%); */
   background-color: #0d121c;
   background-image: url(./images/bg-art-4.png);
-  background-size: cover;
+  background-size: contain;
 }
 
 * {

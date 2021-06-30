@@ -1,0 +1,27 @@
+.nft{
+    background-color: #191f2a;
+    padding:20px;
+    border-radius: 10px;
+    color:black;
+
+    &__name{
+        color:white;
+        font-size:18px;
+        font-weight: 600;
+        margin:10px 0;
+    }
+
+    &__img{
+        width:100%; 
+        height:auto;
+        border-radius: 10px;
+        border:1px solid gray;
+        background-color: white;
+    }
+
+    &__desc{
+        font-size:14px;
+        margin:0;
+        word-break:break-word;
+    }
+}
