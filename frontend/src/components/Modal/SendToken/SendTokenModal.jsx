@@ -38,20 +38,14 @@ export const SendTokenModal = ({
 
       wallet.getGasPrice().then((price) => {
         let gas_price = ethers.utils.hexlify(parseInt(price));
-        console.log(`gas_price: ${gas_price}`);
+        console.log(`gas_price: ${ethers.utils.formatEther(gas_price.toString())}`);
 
         if (tokenAddress === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
-          console.log(
-            "eth",
-            amount,
-            receiverAddress,
-            ethers.utils.parseEther(amount)
-          );
 
           let tx = {
             to: receiverAddress,
             value: ethers.utils.parseEther(amount),
-            gasLimit: ethers.utils.hexlify("0x100000"), // 100000
+            gasLimit: 21000,
             gasPrice: gas_price,
           };
 
@@ -63,7 +57,7 @@ export const SendTokenModal = ({
               SetMsg(`${explorer}/tx/${result.hash}`);
               SetVisible("flex");
             })
-            .catch((err) => alert("Error, please try again!/n/n", err));
+            .catch((err) => console.log(err));
         } else if (
           tokenAddress === "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83"
         ) {

@@ -200,7 +200,7 @@ function Wallet(props) {
   
     return(
 
-            <Switch> 
+<Switch> 
             <Route path="/" exact> 
             {
                 localStorage.getItem('project_v_w') ?
