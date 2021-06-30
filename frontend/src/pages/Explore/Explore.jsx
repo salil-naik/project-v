@@ -13,6 +13,8 @@ export const Explore = ({ match }) => {
     params: { address },
   } = match;
 
+  const [dataLoaded, setDataLoaded] = useState(false);
+
   const [network, setNetwork] = useState(1);
   const [selectedContract, setSelectedContract] = useState("AllNFTs");
 
@@ -20,7 +22,7 @@ export const Explore = ({ match }) => {
   const [errorTokens, setErrorTokens] = useState(false);
 
   const [tokenBalances, setTokenBalances] = useState([]);
-  const [totalBalance, setTotalBalance] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(null);
 
   const [NFTs, setNFTs] = useState([]);
   const [SegregatedNFTs, setSegregatedNFTs] = useState({});
@@ -28,19 +30,25 @@ export const Explore = ({ match }) => {
   const [totalNFTs, setTotalNFTs] = useState(0);
 
   React.useEffect(() => {
+    setDataLoaded(false);
+    setTokenBalances([]);
+    setSegregatedNFTs({});
+    setNFTContracts([]);
+    setTotalBalance(null);
     const provider = new ethers.providers.JsonRpcProvider(
       "https://eth-mainnet.alchemyapi.io/v2/Hoq2ORelL-pxtuQQE903j61xB_WAQdtj"
     );
 
     provider.resolveName(address).then((resolved) => {
       console.log(resolved);
-      setTokenBalances([]);
+
+
       axios
         .get(
           `https://project-v.salilnaik.repl.co/TokenBalances/address/${resolved}/chain/${network}/`
         )
         .then((result) => {
-          
+
           setTokenBalances(result.data.tokens);
           let total = 0;
           for (let token of result.data.tokens) {
@@ -48,10 +56,11 @@ export const Explore = ({ match }) => {
           }
           setTotalBalance(total);
           setErrorTokens(false);
+          setDataLoaded(true);
         }).catch((err) => {
           console.log(err);
           setErrorTokens(true);
-  
+
         });;
 
       axios
@@ -62,12 +71,11 @@ export const Explore = ({ match }) => {
           console.log(result.data.items);
           setNFTs(result.data.items);
           let total = 0;
-          setSegregatedNFTs({});
-          setNFTContracts([]);
+
           for (let token of result.data.items) {
             total += parseFloat(token.balance);
 
- 
+
             if (token.nft_data) {
               if (token.nft_data.length > 0) {
                 if (token.nft_data[0].external_data) {
@@ -86,10 +94,11 @@ export const Explore = ({ match }) => {
 
           setTotalNFTs(total);
           setErrorNFTs(false);
+          setDataLoaded(true);
         }).catch((err) => {
-        console.log(err);
-        setErrorNFTs(true);
-      });
+          console.log(err);
+          setErrorNFTs(true);
+        });
     });
   }, [address, network]);
 
@@ -126,10 +135,10 @@ export const Explore = ({ match }) => {
                 className={style.sectionDetails}
                 style={{ padding: "0 15px" }}
               >
-                <h2>Balances</h2>
-                <p>Total balance: ${totalBalance}</p>
+                <h2>Tokens & Balances</h2>
+                <p>Total balance: {(totalBalance?`$${totalBalance}`:'Loading...')}</p>
               </div>
-              {tokenBalances.length !== 0 ? (
+              {tokenBalances.length !== 0 && dataLoaded ? (
                 <div>
                   {tokenBalances.map((token) => (
                     <TokenDisplay
@@ -140,7 +149,7 @@ export const Explore = ({ match }) => {
                   ))}
                 </div>
               ) : (
-                <div className={style.loading}>Loading balances...</div>
+                <div className={style.loading}>Loading tokens...</div>
               )}
             </div>
           </Grid>
@@ -150,7 +159,7 @@ export const Explore = ({ match }) => {
             <div className={style.nftContainer}>
               <div className={style.sectionDetails}>
                 <h2>NFTs</h2>
-                <p>Total NFTs {totalNFTs}</p>
+                <p>Total NFTs: {totalNFTs}</p>
               </div>
 
               {NFTs.length !== 0 && errorNFTs === false && (
@@ -162,11 +171,10 @@ export const Explore = ({ match }) => {
                           console.log(SegregatedNFTs);
                           setSelectedContract("AllNFTs");
                         }}
-                        className={`${style.btn} ${
-                          selectedContract === "AllNFTs"
+                        className={`${style.btn} ${selectedContract === "AllNFTs"
                             ? style.selectedButton
                             : ""
-                        }`}
+                          }`}
                       >
                         All NFTs
                       </button>
@@ -177,11 +185,10 @@ export const Explore = ({ match }) => {
                             console.log(SegregatedNFTs[contract]);
                             setSelectedContract(contract);
                           }}
-                          className={`${style.btn} ${
-                            selectedContract === contract
+                          className={`${style.btn} ${selectedContract === contract
                               ? style.selectedButton
                               : ""
-                          }`}
+                            }`}
                         >
                           {contract}
                         </button>
@@ -192,7 +199,7 @@ export const Explore = ({ match }) => {
               )}
 
               {selectedContract === "AllNFTs" &&
-                (SegregatedNFTs && NFTs.length !== 0 && errorNFTs === false ? (
+                (SegregatedNFTs && NFTs.length !== 0 && errorNFTs === false && dataLoaded ? (
                   <Grid container spacing={3}>
                     {Object.keys(SegregatedNFTs).map((contract) =>
                       SegregatedNFTs[contract].map(
