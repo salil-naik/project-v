@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { ethers } from "ethers";
 
 import { NFTCard } from "../../components/NFTCard";
 import { TokenDisplay } from "./TokenDisplay/index";
@@ -23,50 +24,57 @@ export const Explore = ({ match }) => {
   const [NFTContracts, setNFTContracts] = useState(new Set());
   const [totalNFTs, setTotalNFTs] = useState(0);
 
-  React.useEffect(() => {
-    axios
-      .get(
-        `https://project-v.salilnaik.repl.co/TokenBalances/address/${address}/chain/${network}/`
-      )
-      .then((result) => {
-        setTokenBalances(result.data.tokens);
-        let total = 0;
-        for (let token of result.data.tokens) {
-          total += token.USD_value;
-        }
-        setTotalBalance(total);
-      });
+  React.useEffect(async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://eth-mainnet.alchemyapi.io/v2/Hoq2ORelL-pxtuQQE903j61xB_WAQdtj"
+    );
 
-    axios
-      .get(
-        `https://project-v.salilnaik.repl.co/NFTs/address/${address}/chain/${network}/`
-      )
-      .then((result) => {
-        console.log(result.data.items);
-        setNFTs(result.data.items);
-        let total = 0;
+    await provider.resolveName(address).then((resolved) => {
+      console.log(resolved)
+      axios
+        .get(
+          `https://project-v.salilnaik.repl.co/TokenBalances/address/${resolved}/chain/${network}/`
+        )
+        .then((result) => {
+          setTokenBalances(result.data.tokens);
+          let total = 0;
+          for (let token of result.data.tokens) {
+            total += token.USD_value;
+          }
+          setTotalBalance(total);
+        });
 
-        for (let token of result.data.items) {
-          total += parseFloat(token.balance);
+      axios
+        .get(
+          `https://project-v.salilnaik.repl.co/NFTs/address/${resolved}/chain/${network}/`
+        )
+        .then((result) => {
+          console.log(result.data.items);
+          setNFTs(result.data.items);
+          let total = 0;
 
-          if (token.nft_data) {
-            if (token.nft_data.length > 0) {
-              if (token.nft_data[0].external_data) {
-                let tempObj = {};
-                tempObj[token.contract_name] = token.nft_data;
-                setSegregatedNFTs((prevState) => {
-                  return { ...prevState, ...tempObj };
-                });
-                setNFTContracts((prevState) => {
-                  return new Set([...prevState, token.contract_name]);
-                });
+          for (let token of result.data.items) {
+            total += parseFloat(token.balance);
+
+            if (token.nft_data) {
+              if (token.nft_data.length > 0) {
+                if (token.nft_data[0].external_data) {
+                  let tempObj = {};
+                  tempObj[token.contract_name] = token.nft_data;
+                  setSegregatedNFTs((prevState) => {
+                    return { ...prevState, ...tempObj };
+                  });
+                  setNFTContracts((prevState) => {
+                    return new Set([...prevState, token.contract_name]);
+                  });
+                }
               }
             }
           }
-        }
 
-        setTotalNFTs(total);
-      });
+          setTotalNFTs(total);
+        });
+    });
   }, [address, network]);
 
   // React.useEffect(() => {
